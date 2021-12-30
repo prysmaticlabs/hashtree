@@ -76,8 +76,7 @@ SOFTWARE.
                     .equiv OUTPUT_PTR,rcx 	// 1st arg
                     .equiv DATA_PTR, rdx 	// 2nd arg
                     .equiv NUM_BLKS, r8	        // 3rd arg
-                    .equiv SHA256PADDING, r10
-                    .equiv RSPSAVE, r9
+                    .equiv SHA256PADDING, r9
 		    #define _DIGEST 184
                     #define frame_size 248
 #else
@@ -119,8 +118,6 @@ SOFTWARE.
 sha256_shani:
 	sub		rsp, frame_size
 #ifdef __WIN64__
-	mov		RSPSAVE, rsp
-
 	movdqa		[rsp + 0*16], xmm6
 	movdqa		[rsp + 1*16], xmm7
 	movdqa		[rsp + 2*16], xmm8
@@ -981,7 +978,7 @@ sha256_shani:
 	movdqa		xmm13, [rsp + 7*16]
 	movdqa		xmm14, [rsp + 8*16]
 	movdqa		xmm15, [rsp + 9*16]
-	mov		rsp, RSPSAVE
 #endif
+	add		rsp, frame_size
 	ret	
 #endif
