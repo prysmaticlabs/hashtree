@@ -25,7 +25,7 @@ SOFTWARE.
 #ifdef __x86_64__
 .intel_syntax noprefix
 .section .rodata
-.align 64
+.align 16
 .LK256:
 	.long	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5
 	.long	0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5
@@ -69,10 +69,8 @@ SOFTWARE.
         .long      0xc39c91f2, 0x9eccabbd, 0xb5c9a0e6, 0x532fb63c
         .long      0xd2c741c6, 0x07237ea3, 0xa4954b68, 0x4c191d76
 
-.LABEF_SAVEa:     .long      0x9b05688c, 0x510e527f, 0xbb67ae85, 0x6a09e667
-.LCDGH_SAVEa:     .long      0x5be0cd19, 0x1f83d9ab, 0xa54ff53a, 0x3c6ef372
-.LABEF_SAVEb:     .long      0x9b05688c, 0x510e527f, 0xbb67ae85, 0x6a09e667
-.LCDGH_SAVEb:     .long      0x5be0cd19, 0x1f83d9ab, 0xa54ff53a, 0x3c6ef372
+.data
+.align 16
 
 #ifdef __WIN64__
                     .equiv OUTPUT_PTR,rcx 	// 1st arg
@@ -80,12 +78,15 @@ SOFTWARE.
                     .equiv NUM_BLKS, r8	        // 3rd arg
                     .equiv SHA256PADDING, r10
                     .equiv RSPSAVE, r9
-                    #define frame_size 184
+		    #define _DIGEST 184
+                    #define frame_size 248
 #else
                     .equiv OUTPUT_PTR, rdi	// 1st arg
                     .equiv DATA_PTR, rsi	// 2nd arg
                     .equiv NUM_BLKS, rdx	// 3rd arg
                     .equiv SHA256PADDING, rcx
+		    #define _DIGEST 0
+		    #define frame_size 88
 #endif
 
 .equiv SHA256CONSTANTS,	rax
@@ -116,9 +117,9 @@ SOFTWARE.
 #endif
 .align 16
 sha256_shani:
+	sub		rsp, frame_size
 #ifdef __WIN64__
 	mov		RSPSAVE, rsp
-	sub		rsp, frame_size
 
 	movdqa		[rsp + 0*16], xmm6
 	movdqa		[rsp + 1*16], xmm7
@@ -483,10 +484,10 @@ sha256_shani:
         # Rounds with PADDING
         
 	# Save hash values for addition after rounds
-	movdqa		[rip + .LABEF_SAVEa], STATE0
-	movdqa		[rip + .LCDGH_SAVEa], STATE1
-	movdqa		[rip + .LABEF_SAVEb], STATE0b
-	movdqa		[rip + .LCDGH_SAVEb], STATE1b
+	movdqa		[rsp + _DIGEST + 0*16], STATE0
+	movdqa		[rip + _DIGEST + 1*16], STATE1
+	movdqa		[rip + _DIGEST + 2*16], STATE0b
+	movdqa		[rip + _DIGEST + 3*16], STATE1b
 
 	# Rounds 0-3
 	movdqa		MSG, [SHA256PADDING + 0*16]
@@ -614,10 +615,10 @@ sha256_shani:
 		sha256rnds2	STATE0, STATE1
 		sha256rnds2	STATE0b, STATE1b
 
-	paddd		STATE0, [rip + .LABEF_SAVEa]
-	paddd		STATE1, [rip + .LCDGH_SAVEa]
-	paddd           STATE0b, [rip + .LABEF_SAVEb]
-	paddd		STATE1b, [rip + .LCDGH_SAVEb]
+	paddd		STATE0, [rsp + _DIGEST + 0*16]
+	paddd		STATE1, [rip + _DIGEST + 1*16]
+	paddd           STATE0b, [rip + _DIGEST + 2*16]
+	paddd		STATE1b, [rip + _DIGEST + 3*16]
 
 
 	# Write hash values back in the correct order
