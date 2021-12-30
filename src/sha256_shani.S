@@ -69,9 +69,6 @@ SOFTWARE.
         .long      0xc39c91f2, 0x9eccabbd, 0xb5c9a0e6, 0x532fb63c
         .long      0xd2c741c6, 0x07237ea3, 0xa4954b68, 0x4c191d76
 
-.data
-.align 16
-
 #ifdef __WIN64__
                     .equiv OUTPUT_PTR,rcx 	// 1st arg
                     .equiv DATA_PTR, rdx 	// 2nd arg
@@ -482,9 +479,9 @@ sha256_shani:
         
 	# Save hash values for addition after rounds
 	movdqa		[rsp + _DIGEST + 0*16], STATE0
-	movdqa		[rip + _DIGEST + 1*16], STATE1
-	movdqa		[rip + _DIGEST + 2*16], STATE0b
-	movdqa		[rip + _DIGEST + 3*16], STATE1b
+	movdqa		[rsp + _DIGEST + 1*16], STATE1
+	movdqa		[rsp + _DIGEST + 2*16], STATE0b
+	movdqa		[rsp + _DIGEST + 3*16], STATE1b
 
 	# Rounds 0-3
 	movdqa		MSG, [SHA256PADDING + 0*16]
@@ -613,9 +610,9 @@ sha256_shani:
 		sha256rnds2	STATE0b, STATE1b
 
 	paddd		STATE0, [rsp + _DIGEST + 0*16]
-	paddd		STATE1, [rip + _DIGEST + 1*16]
-	paddd           STATE0b, [rip + _DIGEST + 2*16]
-	paddd		STATE1b, [rip + _DIGEST + 3*16]
+	paddd		STATE1, [rsp + _DIGEST + 1*16]
+	paddd           STATE0b, [rsp + _DIGEST + 2*16]
+	paddd		STATE1b, [rsp + _DIGEST + 3*16]
 
 
 	# Write hash values back in the correct order
