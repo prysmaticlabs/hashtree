@@ -20,6 +20,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+This code is based on Intel's implementation found in
+	https://github.com/intel/intel-ipsec-mb
+Copied parts are
+	Copyright (c) 2012-2021, Intel Corporation
 */
 
 #ifdef __x86_64__
