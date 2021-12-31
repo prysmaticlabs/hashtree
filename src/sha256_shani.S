@@ -74,7 +74,7 @@ SOFTWARE.
                     .equiv DATA_PTR, rdx 	// 2nd arg
                     .equiv NUM_BLKS, r8	        // 3rd arg
                     .equiv SHA256PADDING, r9
-		    #define _DIGEST 184
+		    #define _DIGEST 160
                     #define frame_size 248
 #else
                     .equiv OUTPUT_PTR, rdi	// 1st arg
