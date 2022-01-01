@@ -1,26 +1,26 @@
 /*
-MIT License
+   MIT License
 
-Copyright (c) 2021 Prysmatic Labs
+   Copyright (c) 2021 Prysmatic Labs
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this software and associated documentation files (the "Software"), to deal
+   in the Software without restriction, including without limitation the rights
+   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   copies of the Software, and to permit persons to whom the Software is
+   furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+   The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+   */
 
 #ifdef __x86_64__
 #include <cpuid.h>
@@ -96,14 +96,14 @@ const unsigned char test_16_block[1024] = {
     0x2a, 0x39, 0x83, 0x4b, 0xba, 0xa5, 0x8f, 0x77, 0x08, 0x67, 0x3a, 0x15, 0x2d, 0xbc, 0x2e, 0x24,
     0xb0, 0x58, 0x2c, 0xf9, 0x55, 0xe3, 0xac, 0x3a, 0xc5, 0x54, 0x74, 0xbb, 0x1f, 0xe7, 0x1e, 0xef,
     0x06, 0x46, 0xea, 0xec, 0x5e, 0x46, 0x91, 0xcb, 0xbc, 0x75, 0xb1, 0xbe, 0xec, 0xd0, 0x2b, 0xf4
-    };
+};
 
 const unsigned char test_1_digest[32] = {
-                                0xe4, 0x8b, 0x12, 0xd3, 0xd0, 0x78, 0xb5, 0x5f,
-                                0x3e, 0x9d, 0x94, 0x7f, 0x93, 0x84, 0x77, 0x77,
-                                0xdb, 0x78, 0x41, 0xe8, 0x91, 0xfb, 0x6d, 0x0d,
-                                0xef, 0x00, 0x30, 0x8e, 0x0a, 0xe4, 0x7b, 0xec
-                                };
+    0xe4, 0x8b, 0x12, 0xd3, 0xd0, 0x78, 0xb5, 0x5f,
+    0x3e, 0x9d, 0x94, 0x7f, 0x93, 0x84, 0x77, 0x77,
+    0xdb, 0x78, 0x41, 0xe8, 0x91, 0xfb, 0x6d, 0x0d,
+    0xef, 0x00, 0x30, 0x8e, 0x0a, 0xe4, 0x7b, 0xec
+};
 
 const unsigned char test_4_digests[128] = {
     0xe4, 0x8b, 0x12, 0xd3, 0xd0, 0x78, 0xb5, 0x5f, 0x3e, 0x9d, 0x94, 0x7f, 0x93, 0x84, 0x77, 0x77,
@@ -114,7 +114,7 @@ const unsigned char test_4_digests[128] = {
     0x32, 0x49, 0x37, 0x79, 0x78, 0xfb, 0xf5, 0xf7, 0x34, 0xf4, 0xa5, 0x49, 0x9f, 0xc8, 0xfa, 0x8e,
     0x28, 0x9b, 0x27, 0xae, 0x21, 0x12, 0x14, 0x57, 0x56, 0xf6, 0x9d, 0x7f, 0x0d, 0x28, 0x03, 0xbd,
     0x05, 0xd0, 0x11, 0x9e, 0xf1, 0x98, 0x8e, 0x1c, 0xbe, 0xc1, 0x83, 0xdb, 0x1a, 0x65, 0x08, 0x0d
-    };
+};
 
 const unsigned char test_16_digests[512] = {
     0xe4, 0x8b, 0x12, 0xd3, 0xd0, 0x78, 0xb5, 0x5f, 0x3e, 0x9d, 0x94, 0x7f, 0x93, 0x84, 0x77, 0x77,
@@ -156,12 +156,12 @@ const unsigned char padding_block[64] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00
-    };
+};
 
 int digests_equal(const unsigned char* first, const unsigned char* second, unsigned int count) {
     for (unsigned int i = 0; i < count; i++) {
-            if (first[i] != second[i])
-                return 0;
+        if (first[i] != second[i])
+            return 0;
     }
     return 1;
 }
@@ -182,108 +182,129 @@ void test_hash_sse_x1_multiple_blocks() {
 void test_hash_avx_1() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(1,0,&a,&b,&c,&d);
-    TEST_ASSERT_(c & bit_AVX, "CPU supports AVX");
-  
-    unsigned char digest[32];
-    sha256_1_avx(digest, test_16_block, 1);
-    TEST_ASSERT(sizeof(digest) == sizeof(test_1_digest));
-    TEST_ASSERT(digests_equal(digest, test_1_digest, sizeof(digest)));
+    if (c & bit_AVX) {
+        unsigned char digest[32];
+        sha256_1_avx(digest, test_16_block, 1);
+        TEST_ASSERT(sizeof(digest) == sizeof(test_1_digest));
+        TEST_ASSERT(digests_equal(digest, test_1_digest, sizeof(digest)));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_, "CPU does not support AVX");
+    }
 }
 
 void test_hash_avx_x1_multiple_blocks() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(1,0,&a,&b,&c,&d);
-    TEST_ASSERT_(c & bit_AVX, "CPU supports AVX");
-
-     unsigned char digest[256];
-    sha256_1_avx(digest, test_16_block, 8);
-    TEST_ASSERT(digests_equal(digest, test_16_digests, sizeof(digest)));
+    if (c & bit_AVX) {
+        unsigned char digest[256];
+        sha256_1_avx(digest, test_16_block, 8);
+        TEST_ASSERT(digests_equal(digest, test_16_digests, sizeof(digest)));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
 
 void test_hash_avx_4() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(1,0,&a,&b,&c,&d);
-    TEST_ASSERT_(c & bit_AVX, "CPU supports AVX");
+    if (c & bit_AVX) {
+        unsigned char digest[256];
+        sha256_4_avx(digest, test_16_block, 8);
 
-    unsigned char digest[256];
-    sha256_4_avx(digest, test_16_block, 8);
-
-    TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
-    TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
-    TEST_DUMP("Produced: ", digest, sizeof(digest));
+        TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
+        TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
+        TEST_DUMP("Produced: ", digest, sizeof(digest));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
+
 
 void test_hash_avx_4_6_blocks() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(1,0,&a,&b,&c,&d);
-    TEST_ASSERT_(c & bit_AVX, "CPU supports AVX");
+    if (c & bit_AVX) {
 
-    unsigned char digest[192];
-    sha256_4_avx(digest, test_16_block, 6);
+        unsigned char digest[192];
+        sha256_4_avx(digest, test_16_block, 6);
 
-    TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
-    TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
-    TEST_DUMP("Produced: ", digest, sizeof(digest));
+        TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
+        TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
+        TEST_DUMP("Produced: ", digest, sizeof(digest));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
 
 void test_hash_avx_8() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(7,0,&a,&b,&c,&d);
-    TEST_ASSERT_(b & bit_AVX2, "CPU supports AVX2");
-
-    unsigned char digest[512];
-        
-    sha256_4_avx(digest, test_16_block, 16);
-
-    TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
-    TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
-    TEST_DUMP("Produced: ", digest, sizeof(digest));
+    if (b & bit_AVX2) {
+        unsigned char digest[512];
+        sha256_4_avx(digest, test_16_block, 16);
+        TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
+        TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
+        TEST_DUMP("Produced: ", digest, sizeof(digest));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX2 ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
 
 void test_hash_avx_8_13_blocks() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(7,0,&a,&b,&c,&d);
-    TEST_ASSERT_(b & bit_AVX2, "CPU supports AVX2");
+    if (b & bit_AVX2) {
+        unsigned char digest[416];
+        sha256_4_avx(digest, test_16_block, 13);
 
-    unsigned char digest[416];
-    sha256_4_avx(digest, test_16_block, 13);
-
-    TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
-    TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
-    TEST_DUMP("Produced: ", digest, sizeof(digest));
+        TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
+        TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
+        TEST_DUMP("Produced: ", digest, sizeof(digest));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX2 ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
 
 void test_hash_shani() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(7,0,&a,&b,&c,&d);
-    TEST_ASSERT_(b & bit_SHA, "CPU supports SHA Extensions");
-
-    unsigned char digest[512];
-        
-    sha256_shani(digest, test_16_block, 16);
-
-    TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
-    TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
-    TEST_DUMP("Produced: ", digest, sizeof(digest));
+    if (b & bit_SHA) {
+        unsigned char digest[512];
+        sha256_shani(digest, test_16_block, 16);
+        TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
+        TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
+        TEST_DUMP("Produced: ", digest, sizeof(digest));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support SHA-ni ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
 
 void test_hash_shani_13_blocks() {
     uint32_t a,b,c,d; 
     __get_cpuid_count(7,0,&a,&b,&c,&d);
-    TEST_ASSERT_(b & bit_SHA, "CPU supports SHA Extensions");
+    if (b & bit_SHA) {
+        unsigned char digest[416];
+        sha256_shani(digest, test_16_block, 13);
 
-    unsigned char digest[416];
-    sha256_shani(digest, test_16_block, 13);
-
-    TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
-    TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
-    TEST_DUMP("Produced: ", digest, sizeof(digest));
+        TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
+        TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
+        TEST_DUMP("Produced: ", digest, sizeof(digest));
+    } else {
+        acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support SHA-ni ]\n");
+        acutest_test_failures_ = 1;
+    }
 }
 #endif
 #ifdef HAVE_OPENSSL
 void test_hash_openssl() {
     unsigned char digest[32];
-        
+
     SHA256(test_16_block, 64, digest);
 
     TEST_CHECK(sizeof(digest) == sizeof(test_1_digest));
@@ -300,7 +321,7 @@ void test_hash_openssl() {
 #ifdef __aarch64__
 void test_hash_armv8_neon_x1_one_block() {
     unsigned char digest[32];
-        
+
     sha256_armv8_neon_x1(digest, test_16_block, 1);
 
     TEST_CHECK(digests_equal(digest, test_1_digest, sizeof(digest)));
@@ -310,7 +331,7 @@ void test_hash_armv8_neon_x1_one_block() {
 
 void test_hash_armv8_neon_x1_multiple_blocks() {
     unsigned char digest[128];
-        
+
     sha256_armv8_neon_x1(digest, test_16_block, 4);
 
     TEST_CHECK(sizeof(digest) == sizeof(test_4_digests));
@@ -324,7 +345,7 @@ void test_hash_armv8_neon_x1_multiple_blocks() {
 
 void test_armv8_neon_x4() {
     unsigned char digest[256];
-        
+
     sha256_armv8_neon_x4(digest, test_16_block, 8);
 
     TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
@@ -336,24 +357,24 @@ void test_armv8_neon_x4() {
 
 TEST_LIST = {
 #ifdef HAVE_OPENSSL
-                {"hash_openssl", test_hash_openssl}, 
+    {"hash_openssl", test_hash_openssl}, 
 #endif
 #ifdef __x86_64__
-                {"hash_sse_1", test_hash_sse_1},
-                {"hash_sse_1_multiple_blocks", test_hash_sse_x1_multiple_blocks},
-                {"hash_avx_1", test_hash_avx_1},
-                {"hash_avx_1_multiple_blocks", test_hash_avx_x1_multiple_blocks},
-                {"hash_avx_4", test_hash_avx_4},
-                {"hash_avx_4_6blocks", test_hash_avx_4_6_blocks},
-                {"hash_avx_8", test_hash_avx_8},
-                {"hash_avx_8_13blocks", test_hash_avx_8_13_blocks},
-                {"hash_shani", test_hash_shani},
-                {"hash_shani_13blocks", test_hash_shani_13_blocks},
+    {"hash_sse_1", test_hash_sse_1},
+    {"hash_sse_1_multiple_blocks", test_hash_sse_x1_multiple_blocks},
+    {"hash_avx_1", test_hash_avx_1},
+    {"hash_avx_1_multiple_blocks", test_hash_avx_x1_multiple_blocks},
+    {"hash_avx_4", test_hash_avx_4},
+    {"hash_avx_4_6blocks", test_hash_avx_4_6_blocks},
+    {"hash_avx_8", test_hash_avx_8},
+    {"hash_avx_8_13blocks", test_hash_avx_8_13_blocks},
+    {"hash_shani", test_hash_shani},
+    {"hash_shani_13blocks", test_hash_shani_13_blocks},
 #endif
 #ifdef __aarch64__
-                {"hash_armv8_neon_one_block", test_hash_armv8_neon_x1_one_block},
-                {"hash_armv8_neon_multiple_blocks", test_hash_armv8_neon_x1_multiple_blocks},
-                {"hash_armv8_neon_x4", test_armv8_neon_x4},
+    {"hash_armv8_neon_one_block", test_hash_armv8_neon_x1_one_block},
+    {"hash_armv8_neon_multiple_blocks", test_hash_armv8_neon_x1_multiple_blocks},
+    {"hash_armv8_neon_x4", test_armv8_neon_x4},
 #endif
-                {NULL, NULL}
-            };
+    {NULL, NULL}
+};
