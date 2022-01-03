@@ -39,11 +39,11 @@ objarm = sha256_armv8_neon_x4.o\
 	sha256_armv8_neon_x1.o
 
 objx86 = sha256_shani.o\
+	sha256_avx_x16.o\
 	sha256_avx_x8.o\
 	sha256_avx_x4.o\
 	sha256_avx_x1.o\
 	sha256_sse_x1.o\
-	
 
 .PHONY : clean
 
