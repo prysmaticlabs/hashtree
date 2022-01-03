@@ -106,6 +106,35 @@ implementation for this CPU runs at the same speed as the single buffer SSE and
 AVX implementation, while the AVX2 implementation 8 blocks at a time runs 5
 times faster.
 
+A benchmark on a cascade-lake supporting AVX-512:
+```shell
+./src/bench
+[==========] Running 9 benchmarks.
+[ RUN      ] sse.sse_x1_one_at_time
+[       OK ] sse.sse_x1_one_at_time (mean 29.182ms, confidence interval +- 0.149473%)
+[ RUN      ] sse.sse_x1
+[       OK ] sse.sse_x1 (mean 28.833ms, confidence interval +- 0.074605%)
+[ RUN      ] avx.avx_x1_one_at_time
+[       OK ] avx.avx_x1_one_at_time (mean 29.205ms, confidence interval +- 0.138581%)
+[ RUN      ] avx.avx_x1
+[       OK ] avx.avx_x1 (mean 28.871ms, confidence interval +- 0.200034%)
+[ RUN      ] avx.avx_x4
+[       OK ] avx.avx_x4 (mean 11.078ms, confidence interval +- 0.140484%)
+[ RUN      ] avx.avx_x8
+[       OK ] avx.avx_x8 (mean 5.650ms, confidence interval +- 0.118668%)
+[ RUN      ] avx.avx_x16
+[       OK ] avx.avx_x16 (mean 2.413ms, confidence interval +- 0.223049%)
+[ RUN      ] shani.shani
+[       OK ] shani.shani (mean -4.-941us, confidence interval +- -1102817647134393.500000%)
+[ RUN      ] shani.shani_one_at_time
+[       OK ] shani.shani_one_at_time (mean 0.-140us, confidence interval +- -70078699044457400.000000%)
+[==========] 9 benchmarks ran.
+[  PASSED  ] 9 benchmarks.
+```
+We see that AVX-512 (x16) runs 12 times faster than a single block
+implementation. This is slightly better than a native SHA extension CPU were
+gains were about x10. 
+
 A similar benchmark on a Raspberry Pi 4 model B:
 ```shell
 $ ./src/bench 
