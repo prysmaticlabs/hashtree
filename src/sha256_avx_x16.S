@@ -283,8 +283,6 @@ Copied parts are
 	vmovdqu32 \r2, \t1			// r2 = {p2 o2 n2 m2  l2 k2 j2 i2  h2 g2 f2 e2  d2 c2 b2 a2}
 .endm
 
-
-
 .macro ROTATE_ARGS
 .eqv TMP_, H
 .eqv H, G
@@ -317,8 +315,6 @@ Copied parts are
 .eqv W15, W_
 .endm
 
-
-
 .macro PROCESS_LOOP WT
 .if .Lpadding - 1
 	vpaddd		T1, H, TMP3		// T1 = H + Kt
@@ -346,43 +342,6 @@ Copied parts are
 	vpternlogd	H, TMP2, TMP3, 0x96	// H(T2) = SIGMA0(A)
 	vpaddd		H, H, TMP0		// H(T2) = SIGMA0(A) + MAJ(A,B,C)
 	vpaddd		H, H, T1		// H(A) = H(T2) + T1
-	ROTATE_ARGS
-.endm
-
-.macro PROCESS_LOOP_00_47 WT, ROUND, WTp1, WTp9, WTp14
-	vmovdqa32	TMP0, E
-	vprord		TMP1, E, 6 		// ROR_6(E)
-	vprord		TMP2, E, 11 		// ROR_11(E)
-	vprord		TMP3, E, 25 		// ROR_25(E)
-	vpternlogd	TMP0, F, G, 0xCA	// TMP0 = CH(E,F,G)
-	vpaddd		T1, H, \WT		// T1 = H + Wt
-	vpternlogd	TMP1, TMP2, TMP3, 0x96	// TMP1 = SIGMA1(E)
-	vpaddd		T1, T1, TMP6		// T1 = T1 + Kt
-	vprord		H, A, 2 		// ROR_2(A)
-	vpaddd		T1, T1, TMP0		// T1 = T1 + CH(E,F,G)
-	vprord		TMP2, A, 13 		// ROR_13(A)
-	vmovdqa32	TMP0, A
-	vprord		TMP3, A, 22 		// ROR_22(A)
-	vpaddd		T1, T1, TMP1		// T1 = T1 + SIGMA1(E)
-	vpternlogd	TMP0, B, C, 0xE8	// TMP0 = MAJ(A,B,C)
-	vpaddd		D, D, T1		// D = D + T1
-	vpternlogd	H, TMP2, TMP3, 0x96	// H(T2) = SIGMA0(A)
-	vprord		TMP4, \WTp14, 17 	// ROR_17(Wt-2)
-	vpaddd		H, H, TMP0		// H(T2) = SIGMA0(A) + MAJ(A,B,C)
-	vprord		TMP5, \WTp14, 19 	// ROR_19(Wt-2)
-	vpsrld		TMP6, \WTp14, 10 	// SHR_10(Wt-2)
-	vpaddd		H, H, T1		// H(A) = H(T2) + T1
-	vpternlogd	TMP4, TMP5, TMP6, 0x96	// TMP4 = sigma1(Wt-2)
-	vpaddd		\WT, \WT, TMP4	// Wt = Wt-16 + sigma1(Wt-2)
-	vprord		TMP4, \WTp1, 7 	// ROR_7(Wt-15)
-	vprord		TMP5, \WTp1, 18 	// ROR_18(Wt-15)
-	vpaddd		\WT, \WT, \WTp9	// Wt = Wt-16 + sigma1(Wt-2) + Wt-7
-	vpsrld		TMP6, \WTp1, 3 	// SHR_3(Wt-15)
-	vpternlogd	TMP4, TMP5, TMP6, 0x96	// TMP4 = sigma0(Wt-15)
-	vpaddd		\WT, \WT, TMP4	// Wt = Wt-16 + sigma1(Wt-2) +
-						//      Wt-7 + sigma0(Wt-15) +
-
-	vmovdqa32	TMP6, [TBL + ((\ROUND+1)*64)]	// Next Kt
 	ROTATE_ARGS
 .endm
 
@@ -1129,18 +1088,18 @@ sha256_16_avx512:
 	ROTATE_ZMMS
 .endr
 
-.set I, 0
+.set .LI, 0
 .rept 48
 	PROCESS_LOOP W0
-	.set I, I+1
-	vmovdqa32	TMP3, [TBL + 64*I]	// Next Kt
+	.set .LI, .LI+1
+	vmovdqa32	TMP3, [TBL + 64*.LI]	// Next Kt
 	MSG_SCHED_ROUND_16_63 W0, W1, W9, W14
 	ROTATE_ZMMS
 .endr
 .rept 16
 	PROCESS_LOOP W0
-	.set I, I+1
-	vmovdqa32	TMP3, [TBL + 64*I]	// Next Kt
+	.set .LI, .LI+1
+	vmovdqa32	TMP3, [TBL + 64*.LI]	// Next Kt
 	ROTATE_ZMMS
 .endr
 
@@ -1170,11 +1129,11 @@ sha256_16_avx512:
 
 	# Rounds with padding
 .set .Lpadding, 1
-.set I, 0
+.set .LI, 0
 .rept 64
-	vmovdqa32	TMP4, [PADDING + 64*I]	// W + K
+	vmovdqa32	TMP4, [PADDING + 64*.LI]	// W + K
 	PROCESS_LOOP TMP4
-	.set I, I+1
+	.set .LI, .LI+1
 .endr
 	vmovdqa32	W8, [rip + .LPSHUFFLE_BYTE_FLIP_MASK]
 

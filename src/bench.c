@@ -178,6 +178,25 @@ UBENCH_EX(avx, avx_x8) {
     free(digest);
 }
 
+UBENCH_EX(avx, avx_x16) {
+    uint32_t a,b,c,d; 
+    __get_cpuid_count(7,0,&a,&b,&c,&d);
+    if (!(b & bit_AVX512F) || !(b & bit_AVX512VL)) {
+      return;
+    }
+
+    int * buffer  = (int *) malloc(buffer_size);
+    unsigned char * digest = (unsigned char *) malloc(buffer_size/2);
+    for (int i = 0; i < buffer_size/sizeof(int); i++) {
+        buffer[i] = rand();
+    }
+    UBENCH_DO_BENCHMARK() {
+        sha256_16_avx512(digest, (unsigned char *)buffer, buffer_size/64);
+    }
+    free(buffer);
+    free(digest);
+}
+
 UBENCH_EX(shani, shani) {
     uint32_t a,b,c,d; 
     __get_cpuid_count(7,0,&a,&b,&c,&d);

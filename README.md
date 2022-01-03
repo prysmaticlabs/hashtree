@@ -67,16 +67,12 @@ Test hash_avx_4...                              [ OK ]
 Test hash_avx_4_6blocks...                      [ OK ]
 Test hash_avx_8...                              [ OK ]
 Test hash_avx_8_13blocks...                     [ OK ]
-Test hash_shani...                              [ FAILED ]
-  test.c:256: Check CPU supports SHA Extensions... failed
-  Test interrupted by SIGABRT.
-Test hash_shani_13blocks...                     [ FAILED ]
-  test.c:270: Check CPU supports SHA Extensions... failed
-  Test interrupted by SIGABRT.
-FAILED: 2 of 10 unit tests have failed.
+Test hash_shani...                              [ CPU does not support SHA-ni ]
+Test hash_shani_13blocks...                     [ CPU does not support SHA-ni ]
+Test hash_avx_16...                             [ OK ]
+Test hash_avx_16_30blocks...                    [ OK ]
 ```
-This is running in a CPU that does not support SHA extensions, that is why the
-last two tests fail.
+This is running in a CPU that does not support SHA extensions, that is why two tests fail. Your system may output a different combination. 
 
 To run benchmarks:
 ```shell
