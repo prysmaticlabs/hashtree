@@ -657,10 +657,6 @@ sha256_shani:
 	movdqa		ABEF_SAVE, STATE0
 	movdqa		CDGH_SAVE, STATE1
 
-	# Save hash values for addition after rounds
-	movdqa		ABEF_SAVE, STATE0
-	movdqa		CDGH_SAVE, STATE1
-
 	# Rounds 0-3
 	movdqu		MSG, [DATA_PTR + 0*16]
 	pshufb		MSG, SHUF_MASK

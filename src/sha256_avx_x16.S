@@ -1041,22 +1041,22 @@ sha256_16_avx512:
 	# W14 = {o15 o14 o13 o12   o11 o10 o9 o8   g15 g14 g13 g12   g11 g10 g9 g8}
 	# W15 = {p15 p14 p13 p12   p11 p10 p9 p8   h15 h14 h13 h12   h11 h10 h9 h8}
 
-	vinserti64x4 W0, W0, [DATA_PTR+0*64], 0x01
-	vinserti64x4 W1, W1, [DATA_PTR+1*64], 0x01
-	vinserti64x4 W2, W2, [DATA_PTR+2*64], 0x01
-	vinserti64x4 W3, W3, [DATA_PTR+3*64], 0x01
-	vinserti64x4 W4, W4, [DATA_PTR+4*64], 0x01
-	vinserti64x4 W5, W5, [DATA_PTR+5*64], 0x01
-	vinserti64x4 W6, W6, [DATA_PTR+6*64], 0x01
-	vinserti64x4 W7, W7, [DATA_PTR+7*64], 0x01
-	vinserti64x4 W8, W8, [DATA_PTR+0*64+32], 0x01
-	vinserti64x4 W9, W9, [DATA_PTR+1*64+32], 0x01
-	vinserti64x4 W10, W10, [DATA_PTR+2*64+32], 0x01
-	vinserti64x4 W11, W11, [DATA_PTR+3*64+32], 0x01
-	vinserti64x4 W12, W12, [DATA_PTR+4*64+32], 0x01
-	vinserti64x4 W13, W13, [DATA_PTR+5*64+32], 0x01
-	vinserti64x4 W14, W14, [DATA_PTR+6*64+32], 0x01
-	vinserti64x4 W15, W15, [DATA_PTR+7*64+32], 0x01
+	vinserti64x4 W0, W0, [DATA_PTR+8*64], 0x01
+	vinserti64x4 W1, W1, [DATA_PTR+9*64], 0x01
+	vinserti64x4 W2, W2, [DATA_PTR+10*64], 0x01
+	vinserti64x4 W3, W3, [DATA_PTR+11*64], 0x01
+	vinserti64x4 W4, W4, [DATA_PTR+12*64], 0x01
+	vinserti64x4 W5, W5, [DATA_PTR+13*64], 0x01
+	vinserti64x4 W6, W6, [DATA_PTR+14*64], 0x01
+	vinserti64x4 W7, W7, [DATA_PTR+15*64], 0x01
+	vinserti64x4 W8, W8, [DATA_PTR+8*64+32], 0x01
+	vinserti64x4 W9, W9, [DATA_PTR+9*64+32], 0x01
+	vinserti64x4 W10, W10, [DATA_PTR+10*64+32], 0x01
+	vinserti64x4 W11, W11, [DATA_PTR+11*64+32], 0x01
+	vinserti64x4 W12, W12, [DATA_PTR+12*64+32], 0x01
+	vinserti64x4 W13, W13, [DATA_PTR+13*64+32], 0x01
+	vinserti64x4 W14, W14, [DATA_PTR+14*64+32], 0x01
+	vinserti64x4 W15, W15, [DATA_PTR+15*64+32], 0x01
 
 .align 32
 	vmovdqa32	TMP2, [rip + .LPSHUFFLE_BYTE_FLIP_MASK]

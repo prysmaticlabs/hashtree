@@ -329,14 +329,6 @@ Copied parts are
 	.equiv TBL, 		rcx
 #endif
 
-.equiv ROUND,	rax
-.equiv inp0, r9
-.equiv inp1, r10
-.equiv inp2, r11
-.equiv inp3, r12
-.equiv inp4, r13
-.equiv inp5, r14
-
 .eqv a, ymm0
 .eqv b, ymm1
 .eqv c, ymm2
@@ -346,7 +338,6 @@ Copied parts are
 .eqv g, ymm6
 .eqv h, ymm7
 
-.equiv T1 , ymm8
 .equiv a0, ymm12
 .equiv a1, ymm13
 .equiv a2, ymm14
@@ -362,10 +353,7 @@ Copied parts are
 .equiv TT6, ymm14
 .equiv TT7, ymm15
 
-#define SHA256_DIGEST_WORD_SIZE  4
 #define SZ8 32
-#define ROUNDS 2048
-
 
 #define _DIGEST	512
 #define _YTMP	768
@@ -529,7 +517,7 @@ Copied parts are
 	PRORD_nd4	\dst, \amt, TMP, \src
 .endm
 
-.macro ROUND_00_15 T1, i
+.macro ROUND_00_15 T1, i, j
 	PRORD_nd	a0, e, (11-6)	// sig1: a0 = (e >> 5)
 
 	vpxor	a2, f, g	// ch: a2 = f^g
@@ -539,9 +527,9 @@ Copied parts are
 	PRORD_nd	a1, e, 25		// sig1: a1 = (e >> 25)
 .if .Lpadding - 1
 	vmovdqa	[SZ8*(\i&0xf) + rsp], \T1     // save current temp message
-	vpaddd	\T1, \T1, [TBL + ROUND]	// T1 = W + K
+	vpaddd	\T1, \T1, [TBL + \j]	// T1 = W + K
 .else
-	vmovdqa 	\T1, [TBL + ROUND]	// T1 = W + K
+	vmovdqa 	\T1, [TBL + (32*\i)]	// T1 = W + K
 .endif
 	vpxor	a0, a0, e	// sig1: a0 = e ^ (e >> 5)
 	PRORD	a0, 6		// sig1: a0 = (e >> 6) ^ (e >> 11)
@@ -551,7 +539,6 @@ Copied parts are
 	vpxor	a0, a0, a1	// a0 = sigma1
 	PRORD_nd	a1, a, 22	// sig0: a1 = (a >> 22)
 	vpxor	\T1, a, c	// maj: T1 = a^c
-	add	ROUND, SZ8	// ROUND++
 	vpand	\T1, \T1, b	// maj: T1 = (a^c)&b
 	vpaddd	h, h, a0
 
@@ -586,7 +573,7 @@ Copied parts are
 	vpaddd	a1, a1, [SZ8*((\i-7)&0xf) + rsp]        // + W[i-7]
 	vpaddd	\T1, \T1, a1
 
-	ROUND_00_15 \T1, \i
+	ROUND_00_15 \T1, \i, 32*\i
 .endm
 
 .text
@@ -627,7 +614,6 @@ sha256_8_avx2:
 .set .Lpadding, 0
 	cmp 	NUM_BLKS, 8
 	jb 	.Lsha256_8_avx2_epilog
-	xor	ROUND, ROUND
 
 	lea TBL,[rip + .LDIGEST_8]
 	vmovdqa	a,[TBL + 0*32]
@@ -672,32 +658,26 @@ sha256_8_avx2:
 	vmovdqa	[YTMP1], TT5
 	vmovdqa	[YTMP2], TT6
 	vmovdqa	[YTMP3], TT7
-	ROUND_00_15	TT0, 8*.Li
+	ROUND_00_15	TT0, 8*.Li, 32*8*.Li
 	vmovdqa	TT0, [YTMP0]
-	ROUND_00_15	TT1, 8*.Li+1
+	ROUND_00_15	TT1, 8*.Li+1, 32*(8*.Li+1)
 	vmovdqa	TT1, [YTMP1]
-	ROUND_00_15	TT2, 8*.Li+2
+	ROUND_00_15	TT2, 8*.Li+2, 32*(8*.Li+2)
 	vmovdqa	TT2, [YTMP2]
-	ROUND_00_15	TT3, 8*.Li+3
+	ROUND_00_15	TT3, 8*.Li+3, 32*(8*.Li+3)
 	vmovdqa	TT3, [YTMP3]
-	ROUND_00_15	TT0, 8*.Li+4
-	ROUND_00_15	TT1, 8*.Li+5
-	ROUND_00_15	TT2, 8*.Li+6
-	ROUND_00_15	TT3, 8*.Li+7
+	ROUND_00_15	TT0, 8*.Li+4, 32*(8*.Li+4)
+	ROUND_00_15	TT1, 8*.Li+5, 32*(8*.Li+5)
+	ROUND_00_15	TT2, 8*.Li+6, 32*(8*.Li+6)
+	ROUND_00_15	TT3, 8*.Li+7, 32*(8*.Li+7)
 .set .Li, .Li+1
 .endr
 
-.set .Li, 8*.Li
-	jmp	.Lrounds_16_xx
-.align 16
-.Lrounds_16_xx:
-.rept 16
-	ROUND_16_XX	T1, .Li
+.set .Li, 16 
+.rept 48
+	ROUND_16_XX	TT0, .Li
 .set .Li, (.Li+1)
 .endr
-
-	cmp	ROUND,ROUNDS
-	jb	.Lrounds_16_xx
 
 	# add old digest
 	lea TBL,[rip + .LDIGEST_8]
@@ -724,14 +704,13 @@ sha256_8_avx2:
 
 
 	lea TBL,[rip + .LPADDING_8]
-	xor ROUND,ROUND
-	jmp 	.Lrounds_padding
 
 .set .Lpadding, 1
+.set .Li, 0
 .align 16
-.Lrounds_padding:
 .rept 64
-	ROUND_00_15 	T1, 0
+	ROUND_00_15 	TT0,  .Li, 32*.Li
+.set .Li, (.Li + 1)
 .endr
 	# add old digest
 	vpaddd	a, a, [rsp + _DIGEST + 0*SZ8]

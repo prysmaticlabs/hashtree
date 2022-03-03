@@ -30,7 +30,7 @@ Copied parts are
 #ifdef __x86_64__
 .intel_syntax noprefix
 .section .rodata
-.align 64
+.align 16
 .LK256:
 	.long	0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5
 	.long	0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5

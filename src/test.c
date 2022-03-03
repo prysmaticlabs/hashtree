@@ -442,7 +442,7 @@ void test_hash_avx_8() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_AVX2) {
         unsigned char digest[512];
-        sha256_4_avx(digest, test_16_block, 16);
+        sha256_8_avx2(digest, test_16_block, 16);
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
         TEST_DUMP("Produced: ", digest, sizeof(digest));
@@ -457,7 +457,7 @@ void test_hash_avx_8_13_blocks() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_AVX2) {
         unsigned char digest[416];
-        sha256_4_avx(digest, test_16_block, 13);
+        sha256_8_avx2(digest, test_16_block, 13);
 
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
