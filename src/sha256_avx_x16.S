@@ -53,14 +53,14 @@ Copied parts are
 #define PADDING		arg5
 #define DIGEST		r11
 
-.eqv A,	zmm0
-.eqv B,	zmm1
-.eqv C,	zmm2
-.eqv D,	zmm3
-.eqv E,	zmm4
-.eqv F,	zmm5
-.eqv G,	zmm6
-.eqv H,	zmm7
+.equ A,	zmm0
+.equ B,	zmm1
+.equ C,	zmm2
+.equ D,	zmm3
+.equ E,	zmm4
+.equ F,	zmm5
+.equ G,	zmm6
+.equ H,	zmm7
 
 #define T1	zmm8
 #define TMP0	zmm9
@@ -88,22 +88,22 @@ Copied parts are
 #define YW14	ymm30
 #define YW15	ymm31
 
-.eqv W0,	zmm16
-.eqv W1,	zmm17
-.eqv W2,	zmm18
-.eqv W3,	zmm19
-.eqv W4,	zmm20
-.eqv W5,	zmm21
-.eqv W6,	zmm22
-.eqv W7,	zmm23
-.eqv W8,	zmm24
-.eqv W9,	zmm25
-.eqv W10,	zmm26
-.eqv W11,	zmm27
-.eqv W12,	zmm28
-.eqv W13,	zmm29
-.eqv W14,	zmm30
-.eqv W15,	zmm31
+.equ W0,	zmm16
+.equ W1,	zmm17
+.equ W2,	zmm18
+.equ W3,	zmm19
+.equ W4,	zmm20
+.equ W5,	zmm21
+.equ W6,	zmm22
+.equ W7,	zmm23
+.equ W8,	zmm24
+.equ W9,	zmm25
+.equ W10,	zmm26
+.equ W11,	zmm27
+.equ W12,	zmm28
+.equ W13,	zmm29
+.equ W14,	zmm30
+.equ W15,	zmm31
 
 # Macros
 
@@ -284,35 +284,35 @@ Copied parts are
 .endm
 
 .macro ROTATE_ARGS
-.eqv TMP_, H
-.eqv H, G
-.eqv G, F
-.eqv F, E
-.eqv E, D
-.eqv D, C
-.eqv C, B
-.eqv B, A
-.eqv A, TMP_
+.equ TMP_, H
+.equ H, G
+.equ G, F
+.equ F, E
+.equ E, D
+.equ D, C
+.equ C, B
+.equ B, A
+.equ A, TMP_
 .endm
 
 .macro ROTATE_ZMMS
-.eqv W_, W0
-.eqv W0, W1
-.eqv W1, W2
-.eqv W2, W3
-.eqv W3, W4
-.eqv W4, W5
-.eqv W5, W6
-.eqv W6, W7
-.eqv W7, W8
-.eqv W8, W9
-.eqv W9, W10
-.eqv W10, W11
-.eqv W11, W12
-.eqv W12, W13
-.eqv W13, W14
-.eqv W14, W15
-.eqv W15, W_
+.equ W_, W0
+.equ W0, W1
+.equ W1, W2
+.equ W2, W3
+.equ W3, W4
+.equ W4, W5
+.equ W5, W6
+.equ W6, W7
+.equ W7, W8
+.equ W8, W9
+.equ W9, W10
+.equ W10, W11
+.equ W11, W12
+.equ W12, W13
+.equ W13, W14
+.equ W14, W15
+.equ W15, W_
 .endm
 
 .macro PROCESS_LOOP WT
