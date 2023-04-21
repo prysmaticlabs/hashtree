@@ -191,14 +191,14 @@ Copied parts are
 
 .equiv ROUND,	r9
 
-.eqv a, xmm0
-.eqv b, xmm1
-.eqv c, xmm2
-.eqv d, xmm3
-.eqv e, xmm4
-.eqv f, xmm5
-.eqv g, xmm6
-.eqv h, xmm7
+.equ a, xmm0
+.equ b, xmm1
+.equ c, xmm2
+.equ d, xmm3
+.equ e, xmm4
+.equ f, xmm5
+.equ g, xmm6
+.equ h, xmm7
 
 .equiv a0, xmm8
 .equiv a1, xmm9
@@ -247,15 +247,15 @@ Copied parts are
 .endm
 
 .macro ROTATE_ARGS
-.eqv TMP_, h
-.eqv h, g
-.eqv g, f
-.eqv f, e
-.eqv e, d
-.eqv d, c
-.eqv c, b
-.eqv b, a
-.eqv a, TMP_
+.equ TMP_, h
+.equ h, g
+.equ g, f
+.equ f, e
+.equ e, d
+.equ d, c
+.equ c, b
+.equ b, a
+.equ a, TMP_
 .endm
 
 

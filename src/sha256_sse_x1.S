@@ -93,10 +93,10 @@ Copied parts are
 .endm
 
 
-.eqv X0, xmm4
-.eqv X1, xmm5
-.eqv X2, xmm6
-.eqv X3, xmm7
+.equ X0, xmm4
+.equ X1, xmm5
+.equ X2, xmm6
+.equ X3, xmm7
 
 .equiv XTMP0, xmm0
 .equiv XTMP1, xmm1
@@ -113,21 +113,21 @@ Copied parts are
                     .equiv OUTPUT_PTR, rcx
                     .equiv DATA_PTR, rdx
                     .equiv count, r8
-                    .eqv c, edi
-                    .eqv d, esi
+                    .equ c, edi
+                    .equ d, esi
 #else
                     .equiv OUTPUT_PTR, rdi
                     .equiv DATA_PTR, rsi
                     .equiv count, rdx
-                    .eqv c, ecx
-                    .eqv d, r8d
+                    .equ c, ecx
+                    .equ d, r8d
 #endif
 .equiv TBL, rbp
-.eqv a, eax
-.eqv b, ebx
-.eqv f, r9d
-.eqv g, r10d
-.eqv h, r11d
+.equ a, eax
+.equ b, ebx
+.equ f, r9d
+.equ g, r10d
+.equ h, r11d
 .equiv e, r12d
 
 .equiv y0, r13d
@@ -143,23 +143,23 @@ Copied parts are
 #endif 
 #define _DIGEST 32
 .macro ROTATE_ARGS
-.eqv TMP_, h
-.eqv h, g
-.eqv g, f
-.eqv f, e
-.eqv e, d
-.eqv d, c
-.eqv c, b
-.eqv b, a
-.eqv a, TMP_
+.equ TMP_, h
+.equ h, g
+.equ g, f
+.equ f, e
+.equ e, d
+.equ d, c
+.equ c, b
+.equ b, a
+.equ a, TMP_
 .endm
 
 .macro rotate_Xs
-.eqv X_, X0
-.eqv X0, X1
-.eqv X1, X2
-.eqv X2, X3
-.eqv X3, X_
+.equ X_, X0
+.equ X0, X1
+.equ X1, X2
+.equ X2, X3
+.equ X3, X_
 .endm
 
 .macro FOUR_ROUNDS_AND_SCHED

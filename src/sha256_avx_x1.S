@@ -97,10 +97,10 @@ Copied parts are
 	vpshufb     \dst, \dst, \msk
 .endm
 
-.eqv X0, xmm4
-.eqv X1, xmm5
-.eqv X2, xmm6
-.eqv X3, xmm7
+.equ X0, xmm4
+.equ X1, xmm5
+.equ X2, xmm6
+.equ X3, xmm7
 
 .equiv XTMP0, xmm0
 .equiv XTMP1, xmm1
@@ -115,34 +115,34 @@ Copied parts are
 .equiv BYTE_FLIP_MASK,	xmm13
 
 #ifdef __WIN64__
-                    .eqv OUTPUT_PTR, rcx            // 1st arg
-                    .eqv DATA_PTR, rdx              // 2nd arg
-                    .eqv d_, ebp                    
+                    .equ OUTPUT_PTR, rcx            // 1st arg
+                    .equ DATA_PTR, rdx              // 2nd arg
+                    .equ d_, ebp                    
                     .equiv count, r8                // 3rd arg
 
-                    .eqv TBL, rsi
-                    .eqv c_, edi
+                    .equ TBL, rsi
+                    .equ c_, edi
                     #define _XMM_SAVE 64
                     #define stack_size 192
 #else
-                    .eqv OUTPUT_PTR, rdi            // 1st arg
-                    .eqv DATA_PTR, rsi              // 2nd arg
-                    .eqv c_, ebp                    
+                    .equ OUTPUT_PTR, rdi            // 1st arg
+                    .equ DATA_PTR, rsi              // 2nd arg
+                    .equ c_, ebp                    
                     .equiv count, rdx               // 3rd arg
 
-                    .eqv TBL, rcx
-                    .eqv d_, r8d     
+                    .equ TBL, rcx
+                    .equ d_, r8d     
                     #define stack_size 88
 #endif
 
 #define _DIGEST 32
 
-.eqv a_, eax
-.eqv b_, ebx
-.eqv e_, r9d
-.eqv f_, r10d
-.eqv g_, r11d
-.eqv h_, r12d
+.equ a_, eax
+.equ b_, ebx
+.equ e_, r9d
+.equ f_, r10d
+.equ g_, r11d
+.equ h_, r12d
 
 .equiv y0, r13d
 .equiv y1, r14d
@@ -150,23 +150,23 @@ Copied parts are
 
 
 .macro rotate_Xs
-.eqv X_, X0
-.eqv X0, X1
-.eqv X1, X2
-.eqv X2, X3
-.eqv X3, X_
+.equ X_, X0
+.equ X0, X1
+.equ X1, X2
+.equ X2, X3
+.equ X3, X_
 .endm
 
 .macro ROTATE_ARGS
-.eqv TMP_, h_
-.eqv h_, g_
-.eqv g_, f_
-.eqv f_, e_
-.eqv e_, d_
-.eqv d_, c_
-.eqv c_, b_
-.eqv b_, a_
-.eqv a_, TMP_
+.equ TMP_, h_
+.equ h_, g_
+.equ g_, f_
+.equ f_, e_
+.equ e_, d_
+.equ d_, c_
+.equ c_, b_
+.equ b_, a_
+.equ a_, TMP_
 .endm
 
 .macro FOUR_ROUNDS_AND_SCHED

@@ -329,14 +329,14 @@ Copied parts are
 	.equiv TBL, 		rcx
 #endif
 
-.eqv a, ymm0
-.eqv b, ymm1
-.eqv c, ymm2
-.eqv d, ymm3
-.eqv e, ymm4
-.eqv f, ymm5
-.eqv g, ymm6
-.eqv h, ymm7
+.equ a, ymm0
+.equ b, ymm1
+.equ c, ymm2
+.equ d, ymm3
+.equ e, ymm4
+.equ f, ymm5
+.equ g, ymm6
+.equ h, ymm7
 
 .equiv a0, ymm12
 .equiv a1, ymm13
@@ -376,15 +376,15 @@ Copied parts are
 #define VMOVPS	vmovups
 
 .macro ROTATE_ARGS
-.eqv TMP_, h
-.eqv h, g
-.eqv g, f
-.eqv f, e
-.eqv e, d
-.eqv d, c
-.eqv c, b
-.eqv b, a
-.eqv a, TMP_
+.equ TMP_, h
+.equ h, g
+.equ g, f
+.equ f, e
+.equ e, d
+.equ d, c
+.equ c, b
+.equ b, a
+.equ a, TMP_
 .endm
 
 .macro TRANSPOSE8_U32_LOAD8 r0, r1, r2, r3, r4, r5, r6, r7, addr0, addr1, addr2,\
