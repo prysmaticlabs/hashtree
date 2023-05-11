@@ -1,0 +1,29 @@
+name: test
+on: [pull_request, workflow_dispatch, push]
+
+jobs:
+  linux:
+    name: linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: make all
+      - name: Run tests
+        run: ./src/test
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: make all
+      - name: Run tests
+        run: ./src/test
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: make all
+      - name: Run tests
+        run: ./src/test.exe
