@@ -583,6 +583,20 @@ void test_armv8_neon_x4() {
     TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
     TEST_DUMP("Produced: ", digest, sizeof(digest));
 }
+
+void test_hash_armv8_crypto_multiple_blocks() {
+    unsigned char digest[128];
+
+    sha256_armv8_crypto(digest, test_16_block, 4);
+
+    TEST_CHECK(sizeof(digest) == sizeof(test_4_digests));
+    TEST_MSG("Expected: %lu", sizeof(test_4_digests));
+    TEST_MSG("Produced: %lu", sizeof(digest));
+
+    TEST_CHECK(digests_equal(digest, test_4_digests, sizeof(digest)));
+    TEST_DUMP("Expected: ", test_4_digests, sizeof(test_4_digests));
+    TEST_DUMP("Produced: ", digest, sizeof(digest));
+}
 #endif
 
 
@@ -608,6 +622,7 @@ TEST_LIST = {
     {"hash_armv8_neon_one_block", test_hash_armv8_neon_x1_one_block},
     {"hash_armv8_neon_multiple_blocks", test_hash_armv8_neon_x1_multiple_blocks},
     {"hash_armv8_neon_x4", test_armv8_neon_x4},
+    {"hash_armv8_crypto_multiple_blocks", test_hash_armv8_crypto_multiple_blocks},
 #endif
     {NULL, NULL}
 };

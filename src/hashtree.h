@@ -28,6 +28,8 @@ SOFTWARE.
 #ifdef __aarch64__
 void sha256_armv8_neon_x1(unsigned char* output, const unsigned char* input, uint64_t count);
 void sha256_armv8_neon_x4(unsigned char* output, const unsigned char* input, uint64_t count);
+void sha256_armv8_crypto(unsigned char *output, const unsigned char *input,
+                         uint64_t count);
 #endif 
 
 #ifdef __x86_64__

@@ -73,6 +73,20 @@ UBENCH_EX(armv8, neon_x4) {
     free(buffer);
     free(digest);
 }
+
+UBENCH_EX(armv8, crypto) {
+    int * buffer  = (int *) malloc(buffer_size);
+    unsigned char * digest = (unsigned char *) malloc(buffer_size/2);
+    for (int i = 0; i < buffer_size/sizeof(int); i++) {
+        buffer[i] = rand();
+    }
+    UBENCH_DO_BENCHMARK() {
+        sha256_armv8_crypto(digest, (unsigned char *)buffer, buffer_size/64);
+    }
+    free(buffer);
+    free(digest);
+}
+
 #endif
 #ifdef __x86_64__
 UBENCH_EX(sse, sse_x1_one_at_time) {
