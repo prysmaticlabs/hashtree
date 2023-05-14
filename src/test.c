@@ -403,7 +403,6 @@ void test_hash_avx_x1_multiple_blocks() {
         TEST_ASSERT(digests_equal(digest, test_16_digests, sizeof(digest)));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -419,7 +418,6 @@ void test_hash_avx_4() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -437,7 +435,6 @@ void test_hash_avx_4_6_blocks() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -452,7 +449,6 @@ void test_hash_avx_8() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX2 ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -468,7 +464,6 @@ void test_hash_avx_8_13_blocks() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX2 ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -483,7 +478,6 @@ void test_hash_shani() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support SHA-ni ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -499,7 +493,6 @@ void test_hash_shani_13_blocks() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support SHA-ni ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -514,7 +507,6 @@ void test_hash_avx_16() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX-512F+AVX-512VL ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -530,7 +522,6 @@ void test_hash_avx512_30_blocks() {
         TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX-512F+AVX-512VL ]\n");
-        acutest_test_failures_ = 1;
     }
 }
 
@@ -604,7 +595,6 @@ void test_hash_armv8_crypto_multiple_blocks() {
     TEST_DUMP("Produced: ", digest, sizeof(digest));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support Sha2 instructions ]\n");
-        acutest_test_failures_ = 1;
     }
 
 }
