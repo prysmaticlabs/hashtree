@@ -367,6 +367,19 @@ int digests_equal(const unsigned char* first, const unsigned char* second, unsig
     }
     return 1;
 }
+void test_hashtree_init() {
+    hashtree_init();
+}
+
+void test_hash() {
+    unsigned char digest[960];
+    hashtree_init();
+    hash(digest, test_32_block, 30);
+    TEST_CHECK(digests_equal(digest, test_32_digests, sizeof(digest)));
+    TEST_DUMP("Expected: ", test_32_digests, sizeof(digest));
+    TEST_DUMP("Produced: ", digest, sizeof(digest));
+}
+
 #ifdef __x86_64__
 void test_hash_sse_1() {
     unsigned char digest[32];
@@ -602,6 +615,8 @@ void test_hash_armv8_crypto_multiple_blocks() {
 
 
 TEST_LIST = {
+    {"hashtree_init", test_hashtree_init},
+    {"hash", test_hash},
 #ifdef HAVE_OPENSSL
     {"hash_openssl", test_hash_openssl}, 
 #endif

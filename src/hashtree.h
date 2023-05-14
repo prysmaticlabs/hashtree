@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2021 Prysmatic Labs
+Copyright (c) 2021-2023 Prysmatic Labs
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,11 @@ SOFTWARE.
 #ifndef HASHTREE_H
 #define HASHTREE_H
 #include <stdint.h>
+
+void hashtree_init();
+
+// Undefined behavior if called before init()
+void hash(unsigned char *output, const unsigned char *input, uint64_t count);
 
 #ifdef __aarch64__
 void sha256_armv8_neon_x1(unsigned char* output, const unsigned char* input, uint64_t count);
