@@ -107,12 +107,12 @@ SOFTWARE.
 .equiv MSGTMP4b,	xmm15
 
 .text 
-.global sha256_shani
+.global hashtree_sha256_shani_x2
 #ifndef __WIN64__
-.type   sha256_shani,%function
+.type   hashtree_sha256_shani_x2,%function
 #endif
 .align 16
-sha256_shani:
+hashtree_sha256_shani_x2:
 	sub		rsp, frame_size
 #ifdef __WIN64__
 	movdqa		[rsp + 0*16], xmm6

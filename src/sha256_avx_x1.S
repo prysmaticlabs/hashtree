@@ -404,12 +404,12 @@ rotate_Xs
 	ROTATE_ARGS
 .endm
 
-.global sha256_1_avx
+.global hashtree_sha256_avx_x1
 #ifndef __WIN64__
-.type   sha256_1_avx,%function
+.type   hashtree_sha256_avx_x1,%function
 #endif
 .align 32
-sha256_1_avx:
+hashtree_sha256_avx_x1:
         endbr64
 	push	rbx
 #ifdef __WIN64__
@@ -602,7 +602,7 @@ sha256_1_avx:
 
 	ret
 #ifdef __linux__ 
-.size sha256_1_avx,.-sha256_1_avx
+.size hashtree_sha256_avx_x1,.-hashtree_sha256_avx_x1
 .section .note.GNU-stack,"",@progbits
 #endif
 #endif

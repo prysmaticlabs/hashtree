@@ -42,7 +42,7 @@ UBENCH_EX(armv8, neon_x1_one_at_time) {
     }
     UBENCH_DO_BENCHMARK() {
         for (int i = 0; i < buffer_size; i+=64) {
-            sha256_armv8_neon_x1(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
+            hashtree_sha256_neon_x1(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
         }
     }
     free(buffer);
@@ -55,7 +55,7 @@ UBENCH_EX(armv8, neon_x1) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_armv8_neon_x1(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_neon_x1(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -68,7 +68,7 @@ UBENCH_EX(armv8, neon_x4) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_armv8_neon_x4(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_neon_x4(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -81,7 +81,7 @@ UBENCH_EX(armv8, crypto) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_armv8_crypto(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_sha_x1(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -97,7 +97,7 @@ UBENCH_EX(sse, sse_x1_one_at_time) {
     }
     UBENCH_DO_BENCHMARK() {
         for (int i = 0; i < buffer_size; i+=64) {
-            sha256_1_sse(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
+            hashtree_sha256_sse_x1(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
         }
     }
     free(buffer);
@@ -110,7 +110,7 @@ UBENCH_EX(sse, sse_x1) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_1_sse(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_sse_x1(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -129,7 +129,7 @@ UBENCH_EX(avx, avx_x1_one_at_time) {
     }
     UBENCH_DO_BENCHMARK() {
         for (int i = 0; i < buffer_size; i+=64) {
-            sha256_1_avx(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
+            hashtree_sha256_avx_x1(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
         }
     }
     free(buffer);
@@ -148,7 +148,7 @@ UBENCH_EX(avx, avx_x1) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_1_avx(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_avx_x1(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -167,7 +167,7 @@ UBENCH_EX(avx, avx_x4) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_4_avx(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_avx_x4(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -186,7 +186,7 @@ UBENCH_EX(avx, avx_x8) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_8_avx2(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_avx2_x8(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -205,7 +205,7 @@ UBENCH_EX(avx, avx_x16) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_16_avx512(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_avx512_x16(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -224,7 +224,7 @@ UBENCH_EX(shani, shani) {
         buffer[i] = rand();
     }
     UBENCH_DO_BENCHMARK() {
-        sha256_shani(digest, (unsigned char *)buffer, buffer_size/64);
+        hashtree_sha256_shani_x2(digest, (unsigned char *)buffer, buffer_size/64);
     }
     free(buffer);
     free(digest);
@@ -243,7 +243,7 @@ UBENCH_EX(shani, shani_one_at_time) {
     }
     UBENCH_DO_BENCHMARK() {
         for (int i = 0; i < buffer_size; i+=64) {
-            sha256_shani(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
+            hashtree_sha256_shani_x2(digest, (unsigned char *)(buffer+i/sizeof(int)), 1);
         }
     }
     free(buffer);

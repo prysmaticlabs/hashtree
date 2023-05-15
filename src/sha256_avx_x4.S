@@ -343,12 +343,12 @@ Copied parts are
 .endm
 
 .text 
-.global sha256_4_avx
+.global hashtree_sha256_avx_x4
 #ifndef __WIN64__
-.type   sha256_4_avx,%function
+.type   hashtree_sha256_avx_x4,%function
 #endif
 .align 16
-sha256_4_avx:
+hashtree_sha256_avx_x4:
         endbr64
 	cmp	NUM_BLKS, 0
 	jne	.Lstart_routine
@@ -512,9 +512,9 @@ sha256_4_avx:
 #endif 
 
 	add	rsp, sha256_avx_4_stack_size
-        jmp     sha256_1_avx
+        jmp     hashtree_sha256_avx_x1
 #ifdef __linux__ 
-.size sha256_4_avx,.-sha256_4_avx
+.size hashtree_sha256_avx_x4,.-hashtree_sha256_avx_x4
 .section .note.GNU-stack,"",@progbits
 #endif
 #endif

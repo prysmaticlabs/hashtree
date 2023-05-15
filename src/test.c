@@ -374,7 +374,7 @@ void test_hashtree_init() {
 void test_hash() {
     unsigned char digest[960];
     hashtree_init();
-    hash(digest, test_32_block, 30);
+    hashtree_hash(digest, test_32_block, 30);
     TEST_CHECK(digests_equal(digest, test_32_digests, sizeof(digest)));
     TEST_DUMP("Expected: ", test_32_digests, sizeof(digest));
     TEST_DUMP("Produced: ", digest, sizeof(digest));
@@ -383,14 +383,14 @@ void test_hash() {
 #ifdef __x86_64__
 void test_hash_sse_1() {
     unsigned char digest[32];
-    sha256_1_sse(digest, test_16_block, 1);
+    hashtree_sha256_sse_x1(digest, test_16_block, 1);
     TEST_ASSERT(sizeof(digest) == sizeof(test_1_digest));
     TEST_ASSERT(digests_equal(digest, test_1_digest, sizeof(digest)));
 }
 
 void test_hash_sse_x1_multiple_blocks() {
     unsigned char digest[256];
-    sha256_1_sse(digest, test_16_block, 8);
+    hashtree_sha256_sse_x1(digest, test_16_block, 8);
     TEST_ASSERT(digests_equal(digest, test_16_digests, sizeof(digest)));
 }
 
@@ -399,7 +399,7 @@ void test_hash_avx_1() {
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
         unsigned char digest[32];
-        sha256_1_avx(digest, test_16_block, 1);
+        hashtree_sha256_avx_x1(digest, test_16_block, 1);
         TEST_ASSERT(sizeof(digest) == sizeof(test_1_digest));
         TEST_ASSERT(digests_equal(digest, test_1_digest, sizeof(digest)));
     } else {
@@ -412,7 +412,7 @@ void test_hash_avx_x1_multiple_blocks() {
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
         unsigned char digest[256];
-        sha256_1_avx(digest, test_16_block, 8);
+        hashtree_sha256_avx_x1(digest, test_16_block, 8);
         TEST_ASSERT(digests_equal(digest, test_16_digests, sizeof(digest)));
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support AVX ]\n");
@@ -424,7 +424,7 @@ void test_hash_avx_4() {
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
         unsigned char digest[256];
-        sha256_4_avx(digest, test_16_block, 8);
+        hashtree_sha256_avx_x4(digest, test_16_block, 8);
 
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
@@ -441,7 +441,7 @@ void test_hash_avx_4_6_blocks() {
     if (c & bit_AVX) {
 
         unsigned char digest[192];
-        sha256_4_avx(digest, test_16_block, 6);
+        hashtree_sha256_avx_x4(digest, test_16_block, 6);
 
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
@@ -456,7 +456,7 @@ void test_hash_avx_8() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_AVX2) {
         unsigned char digest[512];
-        sha256_8_avx2(digest, test_16_block, 16);
+        hashtree_sha256_avx2_x8(digest, test_16_block, 16);
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
         TEST_DUMP("Produced: ", digest, sizeof(digest));
@@ -470,7 +470,7 @@ void test_hash_avx_8_13_blocks() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_AVX2) {
         unsigned char digest[416];
-        sha256_8_avx2(digest, test_16_block, 13);
+        hashtree_sha256_avx2_x8(digest, test_16_block, 13);
 
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
@@ -485,7 +485,7 @@ void test_hash_shani() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_SHA) {
         unsigned char digest[512];
-        sha256_shani(digest, test_16_block, 16);
+        hashtree_sha256_shani_x2(digest, test_16_block, 16);
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
         TEST_DUMP("Produced: ", digest, sizeof(digest));
@@ -499,7 +499,7 @@ void test_hash_shani_13_blocks() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_SHA) {
         unsigned char digest[416];
-        sha256_shani(digest, test_16_block, 13);
+        hashtree_sha256_shani_x2(digest, test_16_block, 13);
 
         TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
@@ -514,7 +514,7 @@ void test_hash_avx_16() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if ((b & bit_AVX512F) && (b & bit_AVX512VL)) {
         unsigned char digest[1024];
-        sha256_16_avx512(digest, test_32_block, 32);
+        hashtree_sha256_avx512_x16(digest, test_32_block, 32);
         TEST_CHECK(digests_equal(digest, test_32_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_32_digests, sizeof(digest));
         TEST_DUMP("Produced: ", digest, sizeof(digest));
@@ -528,7 +528,7 @@ void test_hash_avx512_30_blocks() {
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if ((b & bit_AVX512F) && (b & bit_AVX512VL)) {
         unsigned char digest[960];
-        sha256_16_avx512(digest, test_32_block, 30);
+        hashtree_sha256_avx512_x16(digest, test_32_block, 30);
 
         TEST_CHECK(digests_equal(digest, test_32_digests, sizeof(digest)));
         TEST_DUMP("Expected: ", test_32_digests, sizeof(digest));
@@ -561,7 +561,7 @@ void test_hash_openssl() {
 void test_hash_armv8_neon_x1_one_block() {
     unsigned char digest[32];
 
-    sha256_armv8_neon_x1(digest, test_16_block, 1);
+    hashtree_sha256_neon_x1(digest, test_16_block, 1);
 
     TEST_CHECK(digests_equal(digest, test_1_digest, sizeof(digest)));
     TEST_DUMP("Expected: ", test_1_digest, sizeof(test_1_digest));
@@ -571,7 +571,7 @@ void test_hash_armv8_neon_x1_one_block() {
 void test_hash_armv8_neon_x1_multiple_blocks() {
     unsigned char digest[128];
 
-    sha256_armv8_neon_x1(digest, test_16_block, 4);
+    hashtree_sha256_neon_x1(digest, test_16_block, 4);
 
     TEST_CHECK(sizeof(digest) == sizeof(test_4_digests));
     TEST_MSG("Expected: %lu", sizeof(test_4_digests));
@@ -585,7 +585,7 @@ void test_hash_armv8_neon_x1_multiple_blocks() {
 void test_armv8_neon_x4() {
     unsigned char digest[256];
 
-    sha256_armv8_neon_x4(digest, test_16_block, 8);
+    hashtree_sha256_neon_x4(digest, test_16_block, 8);
 
     TEST_CHECK(digests_equal(digest, test_16_digests, sizeof(digest)));
     TEST_DUMP("Expected: ", test_16_digests, sizeof(digest));
@@ -597,7 +597,7 @@ void test_hash_armv8_crypto_multiple_blocks() {
     if (hwcaps & HWCAP_SHA2) {
     unsigned char digest[128];
 
-    sha256_armv8_crypto(digest, test_16_block, 4);
+    hashtree_sha256_sha_x1(digest, test_16_block, 4);
 
     TEST_CHECK(sizeof(digest) == sizeof(test_4_digests));
     TEST_MSG("Expected: %lu", sizeof(test_4_digests));

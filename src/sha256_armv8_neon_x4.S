@@ -277,10 +277,10 @@ TQ7		    .req q22
                     round_padding   \F, \G, \H, \A, \B, \C, \D, \E
 .endm
  
-.global sha256_armv8_neon_x4
-.type   sha256_armv8_neon_x4,%function
+.global hashtree_sha256_neon_x4
+.type   hashtree_sha256_neon_x4,%function
 .align 5
-sha256_armv8_neon_x4:
+hashtree_sha256_neon_x4:
                     sub                 sp, sp, #1024
 		    adr			k256, .LK256x4
 		    adr			padding, .LPADDINGx4
@@ -389,7 +389,7 @@ sha256_armv8_neon_x4:
                     b                   .Larmv8_neon_x4_loop                   
 .Lsha256_armv8_x4_epilog:
                     add                 sp, sp, #1024
-		    b			sha256_armv8_neon_x1
+		    b			hashtree_sha256_neon_x1
 
 .section .rodata
 .align 4
