@@ -299,10 +299,10 @@ T5 .req w22
 #   is writable.
 #
 ########################################################################################################
-.global sha256_armv8_neon_x1
-.type   sha256_armv8_neon_x1,%function
+.global hashtree_sha256_neon_x1
+.type   hashtree_sha256_neon_x1,%function
 .align 4
-sha256_armv8_neon_x1:
+hashtree_sha256_neon_x1:
 		    sub			sp, sp, #64
 		    stp			digest,k256, [sp, #48]
 		    

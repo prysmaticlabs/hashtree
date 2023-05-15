@@ -67,10 +67,10 @@ padding .req x5
 		    hashupdate		\WORD
 .endm
 
-.global sha256_armv8_crypto
-.type sha256_armv8_crypto,%function
+.global hashtree_sha256_sha_x1
+.type hashtree_sha256_sha_x1,%function
 .align 5
-sha256_armv8_crypto:
+hashtree_sha256_sha_x1:
 		    // Set up stack, need to save the clobbered registers d8-d11
 		    sub			sp, sp, #32
 		    stp			d8, d9, [sp]

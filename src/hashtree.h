@@ -28,21 +28,20 @@ SOFTWARE.
 void hashtree_init();
 
 // Undefined behavior if called before init()
-void hash(unsigned char *output, const unsigned char *input, uint64_t count);
+void hashtree_hash(unsigned char* output, const unsigned char* input, uint64_t count);
 
 #ifdef __aarch64__
-void sha256_armv8_neon_x1(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_armv8_neon_x4(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_armv8_crypto(unsigned char *output, const unsigned char *input,
-                         uint64_t count);
+void hashtree_sha256_neon_x1(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_neon_x4(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_sha_x1(unsigned char* output, const unsigned char* input, uint64_t count);
 #endif 
 
 #ifdef __x86_64__
-void sha256_1_sse(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_1_avx(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_4_avx(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_8_avx2(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_16_avx512(unsigned char* output, const unsigned char* input, uint64_t count);
-void sha256_shani(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_sse_x1(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_avx_x1(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_avx_x4(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_avx2_x8(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_avx512_x16(unsigned char* output, const unsigned char* input, uint64_t count);
+void hashtree_sha256_shani_x2(unsigned char* output, const unsigned char* input, uint64_t count);
 #endif 
 #endif 

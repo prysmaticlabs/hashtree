@@ -362,12 +362,12 @@ rotate_Xs
 .endm
 
 .text
-.global sha256_1_sse
+.global hashtree_sha256_sse_x1
 #ifndef __WIN64__
-.type sha256_1_sse,%function
+.type hashtree_sha256_sse_x1,%function
 #endif
 .align 32
-sha256_1_sse:
+hashtree_sha256_sse_x1:
 	push	rbx
 #ifdef __WIN64__
         push    r8
@@ -560,7 +560,7 @@ sha256_1_sse:
 
 	ret
 #ifdef __linux__ 
-.size sha256_1_sse,.-sha256_1_sse
+.size hashtree_sha256_sse_x1,.-hashtree_sha256_sse_x1
 .section .note.GNU-stack,"",@progbits
 #endif
 #endif

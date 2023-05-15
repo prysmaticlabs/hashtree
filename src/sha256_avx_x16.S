@@ -955,12 +955,12 @@ Copied parts are
 	.long	0x0000000d, 0x0000000f, 0x0000001d, 0x0000001f
 
 .text
-.global sha256_16_avx512
+.global hashtree_sha256_avx512_x16
 #ifndef __WIN64__
-.type sha256_16_avx512,%function
+.type hashtree_sha256_avx512_x16,%function
 #endif
 .align 64
-sha256_16_avx512:
+hashtree_sha256_avx512_x16:
         endbr64
         cmp     COUNT, 0
         jne     .Lstart_routine
@@ -975,7 +975,7 @@ sha256_16_avx512:
 .set .Lpadding, 0
 	
 	cmp		COUNT, 16
-	jb		sha256_8_avx2
+	jb		hashtree_sha256_avx2_x8
 	
 	# Load pre-transposed digest
 	vmovdqa32	A, [DIGEST + 0*64]
@@ -1171,7 +1171,7 @@ sha256_16_avx512:
 	jmp		.Lsha256_16_avx512loop
 
 #ifdef __linux__ 
-.size sha256_16_avx512,.-sha256_16_avx512
+.size hashtree_sha256_avx512_x16,.-hashtree_sha256_avx512_x16
 .section .note.GNU-stack,"",@progbits
 #endif
 	
