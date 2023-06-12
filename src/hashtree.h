@@ -23,18 +23,32 @@ SOFTWARE.
 */
 #ifndef HASHTREE_H
 #define HASHTREE_H
+
 #include <stdint.h>
 
-void hashtree_init();
+typedef void (*hashtree_hash_fcn)(unsigned char*, const unsigned char*, uint64_t);
 
-// Undefined behavior if called before init()
+/** Perfrom hardware detection and return the fastest function available
+ *
+ * @returns Fastest hash tree function, or NULL if no supported hardware is found
+ */
+hashtree_hash_fcn hashtree_detect();
+
+/** Initialize the library to use the given hash tree function or perform
+ * auto-detection based on the CPU if `NULL` is given.
+ *
+ * @returns 0 if auto-detection failed, non-0 otherwise
+ */
+int hashtree_init(hashtree_hash_fcn override);
+
+/* Undefined behavior if called without appropriate hardware support*/
 void hashtree_hash(unsigned char* output, const unsigned char* input, uint64_t count);
 
 #ifdef __aarch64__
 void hashtree_sha256_neon_x1(unsigned char* output, const unsigned char* input, uint64_t count);
 void hashtree_sha256_neon_x4(unsigned char* output, const unsigned char* input, uint64_t count);
 void hashtree_sha256_sha_x1(unsigned char* output, const unsigned char* input, uint64_t count);
-#endif 
+#endif
 
 #ifdef __x86_64__
 void hashtree_sha256_sse_x1(unsigned char* output, const unsigned char* input, uint64_t count);
@@ -43,5 +57,5 @@ void hashtree_sha256_avx_x4(unsigned char* output, const unsigned char* input, u
 void hashtree_sha256_avx2_x8(unsigned char* output, const unsigned char* input, uint64_t count);
 void hashtree_sha256_avx512_x16(unsigned char* output, const unsigned char* input, uint64_t count);
 void hashtree_sha256_shani_x2(unsigned char* output, const unsigned char* input, uint64_t count);
-#endif 
-#endif 
+#endif
+#endif
