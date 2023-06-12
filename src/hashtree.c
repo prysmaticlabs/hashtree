@@ -23,6 +23,8 @@ SOFTWARE.
 */
 
 #include "hashtree.h"
+
+#include <assert.h>
 #ifdef __x86_64__
 #include <cpuid.h>
 #endif
@@ -31,45 +33,68 @@ SOFTWARE.
 #include <asm/hwcap.h>
 #endif
 
-void (*hash_ptr)(unsigned char*, const unsigned char*, uint64_t);
+static void init_and_hash(unsigned char *output, const unsigned char *input, uint64_t count);
 
-void hashtree_init() {
+hashtree_hash_fcn hash_ptr = init_and_hash;
+
+hashtree_hash_fcn hashtree_detect() {
 #ifdef __x86_64__
-    // Hard fail on processors that don't support SSE
-    hash_ptr = &hashtree_sha256_sse_x1;
-    uint32_t a,b,c,d; 
-    __get_cpuid_count(7,0,&a,&b,&c,&d);
-    if ((b & bit_AVX512F) && (b & bit_AVX512VL)) {
-        // Benchmarks show AVX512 performs better than Shani on larger lists
-        hash_ptr = &hashtree_sha256_avx512_x16;
-        return;
-    }
+    uint32_t a, b, c, d;
+    __get_cpuid_count(7, 0, &a, &b, &c, &d);
+
     if (b & bit_SHA) {
-        hash_ptr = &hashtree_sha256_shani_x2;
-        return;
+        /* Although AVX512 may be faster for full 16-block hashes, SHANI
+        outperforms it significantly on smaller lists - thus, avoid pathological
+        behavior. */
+        return &hashtree_sha256_shani_x2;
+    }
+    if ((b & bit_AVX512F) && (b & bit_AVX512VL)) {
+        return &hashtree_sha256_avx512_x16;
     }
     if (b & bit_AVX2) {
-        hash_ptr = &hashtree_sha256_avx2_x8;
-        return;
+        return &hashtree_sha256_avx2_x8;
     }
-    __get_cpuid_count(1,0,&a,&b,&c,&d);
+    __get_cpuid_count(1, 0, &a, &b, &c, &d);
     if (c & bit_AVX) {
-        hash_ptr = &hashtree_sha256_avx_x4;
-        return;
+        return &hashtree_sha256_avx_x4;
     }
-    hash_ptr = &hashtree_sha256_sse_x1;
+    if (c & bit_AVX) {
+        return &hashtree_sha256_sse_x1;
+    }
+
+    return (hashtree_hash_fcn)0;
 #endif
 #ifdef __aarch64__
-    // Hard fail on processors that don't support NEON
     long hwcaps = getauxval(AT_HWCAP);
     if (hwcaps & HWCAP_SHA2) {
-        hash_ptr = &hashtree_sha256_sha_x1;
-        return;
+        return &hashtree_sha256_sha_x1;
     }
-    hash_ptr = &hashtree_sha256_neon_x4;
+
+    if (hwcaps & HWCAP_ASIMD) {
+        return &hashtree_sha256_neon_x4;
+    }
+
+    return (hashtree_hash_fcn)0;
 #endif
+}
+
+int hashtree_init(hashtree_hash_fcn override) {
+    if (override) {
+        hash_ptr = override;
+    } else {
+        hash_ptr = hashtree_detect();
+    }
+
+    return !!hash_ptr;
 }
 
 void hashtree_hash(unsigned char *output, const unsigned char *input, uint64_t count) {
     (*hash_ptr)(output, input, count);
+}
+
+static void init_and_hash(unsigned char *output, const unsigned char *input, uint64_t count) {
+    hash_ptr = hashtree_detect();
+    assert(hash_ptr);
+
+    hashtree_hash(output, input, count);
 }
