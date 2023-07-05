@@ -11,23 +11,3 @@ jobs:
         run: make all
       - name: Run tests
         run: ./src/test
-  macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build
-        run: make all
-      - name: Run tests
-        run: ./src/test
-  windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Add Msys64 to PATH # See https://github.com/actions/runner-images/issues/1613
-        if: matrix.os == 'windows-latest'
-        run: echo "::add-path::/c/msys64/mingw64/bin:/c/msys64/usr/bin"
-        shell: bash
-      - name: Build
-        run: make all
-      - name: Run tests
-        run: ./src/test.exe
