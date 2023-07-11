@@ -615,6 +615,8 @@ void test_override(unsigned char*, const unsigned char*, uint64_t) {
 }
 
 void test_hashtree_init() {
+    TEST_CHECK(!override_called);
+
     hashtree_init(test_override);
 
     unsigned char digest[960];

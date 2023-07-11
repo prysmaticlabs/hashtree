@@ -35,9 +35,9 @@ SOFTWARE.
 
 static void init_and_hash(unsigned char *output, const unsigned char *input, uint64_t count);
 
-hashtree_hash_fcn hash_ptr = init_and_hash;
+static hashtree_hash_fcn hash_ptr = init_and_hash;
 
-hashtree_hash_fcn hashtree_detect() {
+static hashtree_hash_fcn hashtree_detect() {
 #ifdef __x86_64__
     uint32_t a, b, c, d;
     __get_cpuid_count(7, 0, &a, &b, &c, &d);

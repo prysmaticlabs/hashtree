@@ -28,11 +28,6 @@ SOFTWARE.
 
 typedef void (*hashtree_hash_fcn)(unsigned char*, const unsigned char*, uint64_t);
 
-/** Perfrom hardware detection and return the fastest function available
- *
- * @returns Fastest hash tree function, or NULL if no supported hardware is found
- */
-hashtree_hash_fcn hashtree_detect();
 
 /** Initialize the library to use the given hash tree function or perform
  * auto-detection based on the CPU if `NULL` is given.
