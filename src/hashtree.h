@@ -36,7 +36,7 @@ typedef void (*hashtree_hash_fcn)(unsigned char*, const unsigned char*, uint64_t
  */
 int hashtree_init(hashtree_hash_fcn override);
 
-/* Undefined behavior if called without appropriate hardware support*/
+/* Undefined behavior if called without appropriate hardware support */
 void hashtree_hash(unsigned char* output, const unsigned char* input, uint64_t count);
 
 #ifdef __aarch64__
