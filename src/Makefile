@@ -23,6 +23,8 @@
 ARM = $(shell $(CC) -dM -E - < /dev/null | grep "aarch" | awk '{ print $$3 }')
 WIN = $(shell $(CC) -dM -E - < /dev/null | grep "__WIN64__" | awk '{ print $$3 }')
 
+VERSION := 0.0.1-alpha
+
 ASFLAGS += -g -fpic
 CFLAGS +=  -g -Wall -Werror
 LDFLAGS += -L .
@@ -48,7 +50,8 @@ objx86 = sha256_shani.o\
 	sha256_sse_x1.o\
 	hashtree.o\
 
-.PHONY : clean
+.PHONY : clean .FORCE
+.FORCE: 
 
 ifeq ($(WIN),1)
 libname = libhashtree.lib
@@ -57,10 +60,10 @@ libname = libhashtree.a
 endif
 
 ifeq ($(ARM),1)
-libhashtree.a: $(objarm)
+libhashtree.a: $(objarm) hashtree.pc
 	$(AR) rcs libhashtree.a $(objarm)
 else
-$(libname): $(objx86)
+$(libname): $(objx86) hashtree.pc
 	$(AR) rcs $(libname) $(objx86)
 endif
 
@@ -73,4 +76,35 @@ bench: hashtree.h ubench.h bench.c $(libname)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o bench bench.c $(benchlibs)
 
 clean:
-	-rm -f $(objarm) $(objx86) libhashtree.a libhashtree.lib test test.exe bench 
+	-rm -f $(objarm) $(objx86) libhashtree.a libhashtree.lib test test.exe bench hashtree.pc
+
+ifeq ($(PREFIX),)
+PREFIX := /usr
+endif
+
+hashtree.pc: .FORCE
+	@echo 'prefix='$(PREFIX) >> hashtree.pc
+	@echo 'exec_prefix=$${prefix}' >> hashtree.pc
+	@echo 'libdir=$${prefix}/lib' >> hashtree.pc
+	@echo 'includedir=$${prefix}/include' >> hashtree.pc
+	@echo '' >> hashtree.pc
+	@echo 'Name: hashtree' >> hashtree.pc
+	@echo 'Description: Fast hashing of Merkle trees' >> hashtree.pc
+	@echo 'Version: '$(VERSION) >> hashtree.pc
+	@echo 'LIBS: -L$${libdir} -lhashtree' >> hashtree.pc
+	@echo 'Cflags: -I$${includedir}'>> hashtree.pc
+
+ifneq ($(WIN),1)
+install: libhashtree.a hashtree.pc
+	install -d $(DESTDIR)$(PREFIX)/lib
+	install -m 644 libhashtree.a $(DESTDIR)$(PREFIX)/lib/ 
+	install -d $(DESTDIR)$(PREFIX)/include
+	install -m 644 hashtree.h $(DESTDIR)$(PREFIX)/include/
+	install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
+	install -m 644 hashtree.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/hashtree.pc
+
+uninstall: libhashtree.a
+	rm $(DESTDIR)$(PREFIX)/lib/libhashtree.a
+	rm $(DESTDIR)$(PREFIX)/include/hashtree.h
+endif
+

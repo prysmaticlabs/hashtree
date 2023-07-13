@@ -26,8 +26,11 @@ SOFTWARE.
 
 #include <stdint.h>
 
-typedef void (*hashtree_hash_fcn)(unsigned char*, const unsigned char*, uint64_t);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+typedef void (*hashtree_hash_fcn)(unsigned char*, const unsigned char*, uint64_t);
 
 /** Initialize the library to use the given hash tree function or perform
  * auto-detection based on the CPU if `NULL` is given.
@@ -53,4 +56,7 @@ void hashtree_sha256_avx2_x8(unsigned char* output, const unsigned char* input, 
 void hashtree_sha256_avx512_x16(unsigned char* output, const unsigned char* input, uint64_t count);
 void hashtree_sha256_shani_x2(unsigned char* output, const unsigned char* input, uint64_t count);
 #endif
+#ifdef __cplusplus
+}
 #endif
+#endif 
