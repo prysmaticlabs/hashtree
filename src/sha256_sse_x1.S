@@ -128,7 +128,7 @@ Copied parts are
 .equ f, r9d
 .equ g, r10d
 .equ h, r11d
-.equiv e, r12d
+.equ e, r12d
 
 .equiv y0, r13d
 .equiv y1, r14d
