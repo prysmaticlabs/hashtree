@@ -83,7 +83,7 @@ PREFIX := /usr
 endif
 
 hashtree.pc: .FORCE
-	@echo 'prefix='$(PREFIX) >> hashtree.pc
+	@echo 'prefix='$(PREFIX) > hashtree.pc
 	@echo 'exec_prefix=$${prefix}' >> hashtree.pc
 	@echo 'libdir=$${prefix}/lib' >> hashtree.pc
 	@echo 'includedir=$${prefix}/include' >> hashtree.pc
