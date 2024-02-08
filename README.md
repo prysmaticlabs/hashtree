@@ -181,3 +181,17 @@ BenchmarkHashBalancePrysm-4             10     103716714 ns/op
 PASS
 ```
 
+
+## Nim bindings
+
+The library offers low-level bindings for Nim that can be installed using:
+
+```sh
+nimble install https://github.com/prysmaticlabs/hashtree/
+```
+
+or used in a package with:
+
+```nim
+requires "https://github.com/prysmaticlabs/hashtree/"
+```
