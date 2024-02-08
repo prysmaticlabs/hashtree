@@ -11,3 +11,12 @@ jobs:
         run: make all
       - name: Run tests
         run: ./src/test
+
+  nim:
+    name: nim
+    runs-on: ubuntu-latest
+    steps:
+      - uses: jiro4989/setup-nim-action@v1
+      - uses: actions/checkout@v3
+      - name: Run Nim test
+        run: nim c -r tests/hashtree.nim
