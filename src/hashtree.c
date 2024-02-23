@@ -39,7 +39,7 @@ static hashtree_hash_fcn hash_ptr = init_and_hash;
 
 static hashtree_hash_fcn hashtree_detect() {
 #ifdef __x86_64__
-    uint32_t a, b, c, d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7, 0, &a, &b, &c, &d);
 
     if (b & bit_SHA) {
