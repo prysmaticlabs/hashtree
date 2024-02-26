@@ -391,7 +391,7 @@ void test_hash_sse_x1_multiple_blocks() {
 }
 
 void test_hash_avx_1() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
         unsigned char digest[32];
@@ -404,7 +404,7 @@ void test_hash_avx_1() {
 }
 
 void test_hash_avx_x1_multiple_blocks() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
         unsigned char digest[256];
@@ -416,7 +416,7 @@ void test_hash_avx_x1_multiple_blocks() {
 }
 
 void test_hash_avx_4() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
         unsigned char digest[256];
@@ -432,7 +432,7 @@ void test_hash_avx_4() {
 
 
 void test_hash_avx_4_6_blocks() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (c & bit_AVX) {
 
@@ -448,7 +448,7 @@ void test_hash_avx_4_6_blocks() {
 }
 
 void test_hash_avx_8() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_AVX2) {
         unsigned char digest[512];
@@ -462,7 +462,7 @@ void test_hash_avx_8() {
 }
 
 void test_hash_avx_8_13_blocks() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_AVX2) {
         unsigned char digest[416];
@@ -477,7 +477,7 @@ void test_hash_avx_8_13_blocks() {
 }
 
 void test_hash_shani() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_SHA) {
         unsigned char digest[512];
@@ -491,7 +491,7 @@ void test_hash_shani() {
 }
 
 void test_hash_shani_13_blocks() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (b & bit_SHA) {
         unsigned char digest[416];
@@ -506,7 +506,7 @@ void test_hash_shani_13_blocks() {
 }
 
 void test_hash_avx_16() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if ((b & bit_AVX512F) && (b & bit_AVX512VL)) {
         unsigned char digest[1024];
@@ -520,7 +520,7 @@ void test_hash_avx_16() {
 }
 
 void test_hash_avx512_30_blocks() {
-    uint32_t a,b,c,d;
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if ((b & bit_AVX512F) && (b & bit_AVX512VL)) {
         unsigned char digest[960];

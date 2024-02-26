@@ -117,7 +117,7 @@ UBENCH_EX(sse, sse_x1) {
 }
 
 UBENCH_EX(avx, avx_x1_one_at_time) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (!(c & bit_AVX)) {
       return;
@@ -136,7 +136,7 @@ UBENCH_EX(avx, avx_x1_one_at_time) {
 }
 
 UBENCH_EX(avx, avx_x1) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (!(c & bit_AVX)) {
       return;
@@ -155,7 +155,7 @@ UBENCH_EX(avx, avx_x1) {
 }
 
 UBENCH_EX(avx, avx_x4) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(1,0,&a,&b,&c,&d);
     if (!(c & bit_AVX)) {
       return;
@@ -174,7 +174,7 @@ UBENCH_EX(avx, avx_x4) {
 }
 
 UBENCH_EX(avx, avx_x8) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (!(b & bit_AVX2)) {
       return;
@@ -193,7 +193,7 @@ UBENCH_EX(avx, avx_x8) {
 }
 
 UBENCH_EX(avx, avx_x16) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (!(b & bit_AVX512F) || !(b & bit_AVX512VL)) {
       return;
@@ -212,7 +212,7 @@ UBENCH_EX(avx, avx_x16) {
 }
 
 UBENCH_EX(shani, shani) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (!(b & bit_SHA)) {
       return;
@@ -231,7 +231,7 @@ UBENCH_EX(shani, shani) {
 }
 
 UBENCH_EX(shani, shani_one_at_time) {
-    uint32_t a,b,c,d; 
+    uint32_t a = 0, b = 0, c = 0, d = 0;
     __get_cpuid_count(7,0,&a,&b,&c,&d);
     if (!(b & bit_SHA)) {
       return;
