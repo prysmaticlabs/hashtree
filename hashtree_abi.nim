@@ -1,9 +1,10 @@
 # hashtree nim bindings
 # Copyright (c) 2024 Status Research & Development GmbH
-# Licensed and distributed under either of
+# Licensed and distributed under
 #   * MIT license (license terms in the root directory or at https://opensource.org/licenses/MIT).
-#   * Apache v2 license (license terms in the root directory or at https://www.apache.org/licenses/LICENSE-2.0).
-# at your option. This file may not be copied, modified, or distributed except according to those terms.
+# This file may not be copied, modified, or distributed except according to those terms.
+
+{.pragma: hashtreedecl, importc, cdecl, gcsafe, raises: [].}
 
 import std/[os, strutils]
 
@@ -23,7 +24,9 @@ elif defined(amd64):
   {.compile: srcDir & "sha256_shani.S".}
   {.compile: srcDir & "sha256_sse_x1.S".}
 
-type HashFcn* = proc(output: pointer, input: pointer, count: uint64) {.cdecl, noSideEffect, gcsafe, raises: [].}
+type HashFcn* = proc(output: pointer, input: pointer, count: uint64) {.
+  cdecl, noSideEffect, gcsafe, raises: [].}
 
-proc hashtree_init*(override: HashFcn): cint {.importc, gcsafe, raises: [].}
-func hashtree_hash*(output: pointer, input: pointer, count: uint64) {.importc, gcsafe, raises: [].}
+proc hashtree_init*(override: HashFcn): cint {.hashtreedecl.}
+func hashtree_hash*(output: pointer, input: pointer, count: uint64) {.
+  hashtreedecl.}

@@ -1,3 +1,9 @@
+# hashtree nim bindings
+# Copyright (c) 2024 Status Research & Development GmbH
+# Licensed and distributed under
+#   * MIT license (license terms in the root directory or at https://opensource.org/licenses/MIT).
+# This file may not be copied, modified, or distributed except according to those terms.
+
 mode = ScriptMode.Verbose
 
 packageName   = "hashtree_abi"
