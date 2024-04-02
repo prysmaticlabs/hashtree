@@ -6,7 +6,7 @@ jobs:
     name: linux
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build
         run: make all
       - name: Run tests
@@ -19,4 +19,4 @@ jobs:
       - uses: jiro4989/setup-nim-action@v1
       - uses: actions/checkout@v3
       - name: Run Nim test
-        run: nim c -r tests/hashtree.nim
+        run: nim c -r tests/test_hashtree_abi.nim
