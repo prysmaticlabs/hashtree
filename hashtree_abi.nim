@@ -12,8 +12,10 @@ const srcDir = currentSourcePath.parentDir.replace('\\', '/') & "/src/"
 
 {.compile: srcDir & "hashtree.c".}
 
-# The assembly syntax used doesn't work on other platforms for the time being
-when (defined(linux) or defined(windows)) and (defined(gcc) or defined(clang)):
+# The assember files use binutils-specific macros and lack mac support - in
+# particular, clang is not supported / can only work when using `gas` via
+# `-fno-integrated-as` - the latter is left for future exploration
+when (defined(linux) or defined(windows)) and defined(gcc):
   when defined(arm64):
     {.compile: srcDir & "sha256_armv8_neon_x1.S".}
     {.compile: srcDir & "sha256_armv8_neon_x4.S".}
