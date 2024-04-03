@@ -12,21 +12,31 @@ const srcDir = currentSourcePath.parentDir.replace('\\', '/') & "/src/"
 
 {.compile: srcDir & "hashtree.c".}
 
-# The assember files use binutils-specific macros and lack mac support - in
-# particular, clang is not supported / can only work when using `gas` via
-# `-fno-integrated-as` - the latter is left for future exploration
-when (defined(linux) or defined(windows)) and defined(gcc):
+# The assember files use gnu/binutils-specific macros and lack mac support in
+# general
+when ((defined(linux) or defined(windows)) and defined(gcc)) or
+    (defined(clang) and defined(linux)):
+
+  const cflags =
+    when defined(clang):
+      # The integrated `clang` assembler uses a different macro syntax but on
+      # linux we can convince it to use the system assembler which _tends_ to be
+      # the binutils variant
+      "-fno-integrated-as"
+    else:
+      ""
+
   when defined(arm64):
-    {.compile: srcDir & "sha256_armv8_neon_x1.S".}
-    {.compile: srcDir & "sha256_armv8_neon_x4.S".}
+    {.compile(srcDir & "sha256_armv8_neon_x1.S", cflags).}
+    {.compile(srcDir & "sha256_armv8_neon_x4.S", cflags).}
 
   elif defined(amd64):
-    {.compile: srcDir & "sha256_avx_x1.S".}
-    {.compile: srcDir & "sha256_avx_x4.S".}
-    {.compile: srcDir & "sha256_avx_x8.S".}
-    {.compile: srcDir & "sha256_avx_x16.S".}
-    {.compile: srcDir & "sha256_shani.S".}
-    {.compile: srcDir & "sha256_sse_x1.S".}
+    {.compile(srcDir & "sha256_avx_x1.S", cflags).}
+    {.compile(srcDir & "sha256_avx_x4.S", cflags).}
+    {.compile(srcDir & "sha256_avx_x8.S", cflags).}
+    {.compile(srcDir & "sha256_avx_x16.S", cflags).}
+    {.compile(srcDir & "sha256_shani.S", cflags).}
+    {.compile(srcDir & "sha256_sse_x1.S", cflags).}
 
 type HashFcn* = proc(output: pointer, input: pointer, count: uint64) {.
   cdecl, noSideEffect, gcsafe, raises: [].}
