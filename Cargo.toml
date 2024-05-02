@@ -4,9 +4,13 @@ version = "0.1.0"
 authors = ["Potuz <potuz@prysmaticlabs.com>"]
 edition = "2021"
 description = "Rust bindings for the hashtree library"
+documentation = "https://github.com/prysmaticlabs/hashtree"
+repository = "https://github.com/prysmaticlabs/hashtree"
+homepage = "https://github.com/prysmaticlabs/hashtree"
 license = "MIT"
 build = "build.rs" 
 keywords = ["hash", "crypto", "sha256", "merkle"]
+include = ["build.rs", "Cargo.toml", "src/lib.rs", "src/*.c", "src/*.h", "src/*.S", "Makefile", "src/Makefile"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]

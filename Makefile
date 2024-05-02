@@ -3,7 +3,7 @@ libhashtree:
 
 clean:
 	$(MAKE) -C src clean
-	cd rust_bindings && cargo clean
+	cargo clean
 
 test:
 	$(MAKE) -C src test
