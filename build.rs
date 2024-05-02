@@ -22,22 +22,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
 use std::env;
 use std::path::PathBuf;
 use std::process::Command;
 
 fn main() {
-    let root_path = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap()).join("..");
+    let out_dir = env::var("OUT_DIR").unwrap_or_else(|_| {
+        let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+        format!("{}/build", manifest_dir)
+    });
 
-    Command::new("make")
-        .current_dir(&root_path)
-        .output()
-        .expect("Failed to build hashtree");
+    let lib_dir = PathBuf::from(&out_dir).join("lib");
+    let src_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
 
-    println!(
-        "cargo:rustc-link-search=native={}",
-        root_path.join("src").display()
-    );
+    let status = Command::new("make")
+        .current_dir(&src_dir)
+        .env("OUT_DIR", &out_dir) // Pass OUT_DIR to makefile if needed
+        .status()
+        .expect("Failed to execute make command");
+
+    if !status.success() {
+        panic!("Failed to build the C library");
+    }
+
+    println!("cargo:rustc-link-search=native={}", lib_dir.display());
     println!("cargo:rustc-link-lib=static=hashtree");
 }

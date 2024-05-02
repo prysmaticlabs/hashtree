@@ -37,46 +37,60 @@ benchlibs += -lcrypto
 testlibs += -lcrypto
 endif
 
-objarm = sha256_armv8_neon_x4.o\
-	sha256_armv8_neon_x1.o\
-	sha256_armv8_crypto.o\
-	hashtree.o\
+OUT_DIR ?= $(CURDIR)/../build
+OBJ_DIR := $(OUT_DIR)/obj
+LIB_DIR := $(OUT_DIR)/lib
 
-objx86 = sha256_shani.o\
-	sha256_avx_x16.o\
-	sha256_avx_x8.o\
-	sha256_avx_x4.o\
-	sha256_avx_x1.o\
-	sha256_sse_x1.o\
-	hashtree.o\
+# Ensure these directories exist
+$(shell mkdir -p $(OBJ_DIR))
+$(shell mkdir -p $(LIB_DIR))
+
+objarm = $(OBJ_DIR)/sha256_armv8_neon_x4.o\
+         $(OBJ_DIR)/sha256_armv8_neon_x1.o\
+         $(OBJ_DIR)/sha256_armv8_crypto.o\
+         $(OBJ_DIR)/hashtree.o
+
+objx86 = $(OBJ_DIR)/sha256_shani.o\
+         $(OBJ_DIR)/sha256_avx_x16.o\
+         $(OBJ_DIR)/sha256_avx_x8.o\
+         $(OBJ_DIR)/sha256_avx_x4.o\
+         $(OBJ_DIR)/sha256_avx_x1.o\
+         $(OBJ_DIR)/sha256_sse_x1.o\
+         $(OBJ_DIR)/hashtree.o
 
 .PHONY : clean .FORCE
 .FORCE: 
 
+$(OBJ_DIR)/%.o: %.S
+	$(CC) $(ASFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 ifeq ($(WIN),1)
-libname = libhashtree.lib
+libname = $(LIB_DIR)/libhashtree.lib
 else
-libname = libhashtree.a
+libname = $(LIB_DIR)/libhashtree.a
 endif
 
 ifeq ($(ARM),1)
-libhashtree.a: $(objarm) hashtree.pc
-	$(AR) rcs libhashtree.a $(objarm)
+$(LIB_DIR)/libhashtree.a: $(objarm)
+	$(AR) rcs $@ $(objarm)
 else
-$(libname): $(objx86) hashtree.pc
-	$(AR) rcs $(libname) $(objx86)
+$(libname): $(objx86)
+	$(AR) rcs $@ $(objx86)
 endif
 
 all: $(libname) test bench
 
 test: hashtree.h acutest.h test.c $(libname)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o test test.c $(testlibs)
+	$(CC) $(CFLAGS) $(LDFLAGS) -L$(LIB_DIR) -o $(OUT_DIR)/test test.c $(testlibs)
 
 bench: hashtree.h ubench.h bench.c $(libname)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o bench bench.c $(benchlibs)
+	$(CC) $(CFLAGS) $(LDFLAGS) -L$(LIB_DIR) -o $(OUT_DIR)/bench bench.c $(benchlibs)
 
 clean:
-	-rm -f $(objarm) $(objx86) libhashtree.a libhashtree.lib test test.exe bench hashtree.pc
+	-rm -f $(objarm) $(objx86) $(LIB_DIR)/libhashtree.a $(LIB_DIR)/libhashtree.lib $(OUT_DIR)/test $(OUT_DIR)/test.exe $(OUT_DIR)/bench hashtree.pc
 
 ifeq ($(PREFIX),)
 PREFIX := /usr
@@ -96,15 +110,15 @@ hashtree.pc: .FORCE
 	@echo 'Cflags: -I$${includedir}'>> hashtree.pc
 
 ifneq ($(WIN),1)
-install: libhashtree.a hashtree.pc
+install: $(libname) hashtree.pc
 	install -d $(DESTDIR)$(PREFIX)/lib
-	install -m 644 libhashtree.a $(DESTDIR)$(PREFIX)/lib/ 
+	install -m 644 $(libname) $(DESTDIR)$(PREFIX)/lib/ 
 	install -d $(DESTDIR)$(PREFIX)/include
 	install -m 644 hashtree.h $(DESTDIR)$(PREFIX)/include/
 	install -d $(DESTDIR)$(PREFIX)/lib/pkgconfig
 	install -m 644 hashtree.pc $(DESTDIR)$(PREFIX)/lib/pkgconfig/hashtree.pc
 
-uninstall: libhashtree.a
+uninstall: $(libname)
 	rm $(DESTDIR)$(PREFIX)/lib/libhashtree.a
 	rm $(DESTDIR)$(PREFIX)/include/hashtree.h
 endif

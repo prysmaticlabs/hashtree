@@ -10,7 +10,7 @@ jobs:
       - name: Build
         run: make all
       - name: Run tests
-        run: ./src/test
+        run: ./build/test
 
   rust-bindings:
     runs-on: ubuntu-latest
@@ -31,7 +31,6 @@ jobs:
         rustup target add ${{ matrix.target }}
     - name: Build and Test
       run: |
-        cd rust_bindings 
         cargo build --release
         cargo test
 
