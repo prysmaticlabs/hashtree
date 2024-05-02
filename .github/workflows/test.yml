@@ -13,11 +13,12 @@ jobs:
         run: ./src/test
   rust-bindings:
     runs-on: ubuntu-latest
-    name: rust-bindings
+    name: (${{ matrix.target }})
     strategy:
       matrix:
         target: [
           x86_64-unknown-linux-gnu,
+          aarch64-unknown-linux-gnu,
         ]
     steps:
     - name: checkout
