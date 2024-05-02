@@ -27,6 +27,7 @@ when ((defined(linux) or defined(windows)) and defined(gcc)) or
       ""
 
   when defined(arm64):
+    {.compile(srcDir & "sha256_armv8_crypto.S", cflags).}
     {.compile(srcDir & "sha256_armv8_neon_x1.S", cflags).}
     {.compile(srcDir & "sha256_armv8_neon_x4.S", cflags).}
 
