@@ -23,7 +23,7 @@
 ARM = $(shell $(CC) -dM -E - < /dev/null | grep "aarch" | awk '{ print $$3 }')
 WIN = $(shell $(CC) -dM -E - < /dev/null | grep "__WIN64__" | awk '{ print $$3 }')
 
-VERSION := 0.0.1-alpha
+VERSION := 0.1.0
 
 ASFLAGS += -g -fpic
 CFLAGS +=  -g -Wall -Werror
