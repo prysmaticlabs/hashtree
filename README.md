@@ -181,7 +181,6 @@ BenchmarkHashBalancePrysm-4             10     103716714 ns/op
 PASS
 ```
 
-
 ## Nim bindings
 
 The library offers low-level bindings for Nim that can be installed using:
@@ -195,3 +194,19 @@ or used in a package with:
 ```nim
 requires "https://github.com/prysmaticlabs/hashtree/"
 ```
+
+## Rust bindings
+
+At the top directory you can run 
+
+```
+$ make rust_bindings
+```
+
+To run tests:
+
+```
+$ make rust_tests
+```
+
+See the `examples` directory for examples on how to use the library
