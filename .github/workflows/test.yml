@@ -11,3 +11,24 @@ jobs:
         run: make all
       - name: Run tests
         run: ./src/test
+  rust-bindings:
+    runs-on: ubuntu-latest
+    name: rust-bindings
+    strategy:
+      matrix:
+        target: [
+          x86_64-unknown-linux-gnu,
+        ]
+    steps:
+    - name: checkout
+      uses: actions/checkout@v3
+    - name: install rustup
+      run: |
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
+        sh rustup-init.sh -y --default-toolchain none
+        rustup target add ${{ matrix.target }}
+    - name: Build and Test
+      run: |
+        cd rust_bindings 
+        cargo build --release
+        cargo test
