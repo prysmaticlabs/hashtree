@@ -1,7 +1,7 @@
 /*
 MIT License
 
-Copyright (c) 2021 Prysmatic Labs
+Copyright (c) 2021-2024 Prysmatic Labs
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,8 @@ SOFTWARE.
 
 This code is based on Intel's implementation found in
 	https://github.com/intel/intel-ipsec-mb
-Copied parts are
-	Copyright (c) 2012-2021, Intel Corporation
+Such software is licensed under the BSD 3-Clause License and is 
+Copyright (c) 2012-2023, Intel Corporation
 */
 
 #ifdef __x86_64__
