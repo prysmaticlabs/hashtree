@@ -282,10 +282,18 @@ TQ7		    .req q22
 .align 5
 hashtree_sha256_neon_x4:
                     sub                 sp, sp, #1024
-		    adr			k256, .LK256x4
-		    adr			padding, .LPADDINGx4
-		    adr			digest, .LDIGESTx4L
-                    adr                 digest2, .LDIGESTx4H
+		    adrp		k256, .LK256x4
+		    add			k256, k256, #:lo12:.LK256x4
+
+		    adrp		padding, .LPADDINGx4
+		    add			padding, padding, #:lo12:.LPADDINGx4
+
+		    adrp		digest, .LDIGESTx4L
+		    add			digest, digest, #:lo12:.LDIGESTx4L
+
+		    adrp		digest2, .LDIGESTx4H
+		    add			digest2, digest2, #:lo12:.LDIGESTx4H
+
                     mov                 post64, #64
                     mov                 post32, #32
                     mov                 postminus80, #-80
