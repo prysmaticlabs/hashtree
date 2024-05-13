@@ -55,35 +55,55 @@ padding .req x5
 
 
 .macro hashupdate WORD
-		    sha256h		q2, q3, WORD\().4s
-		    sha256h2		q3, q8, WORD\().4s
+		    sha256h		q2, q3, \WORD
+		    sha256h2		q3, q8, \WORD
 		    mov			v8.16b, v2.16b
 .endm 
 
 .macro schedule	    A, B, C, D, E, WORD
-		    add			\WORD\().4s, \B\().4s, \A\().4s
-		    sha256su0		\B\().4s, \C\().4s
-		    sha256su1		\E\().4s, \C\().4s, \D\().4s
+		    add			\WORD, \B, \A
+		    sha256su0		\B, \C
+		    sha256su1		\E, \C, \D
 		    hashupdate		\WORD
 .endm
 
+#ifdef __APPLE__
+.global _hashtree_sha256_sha_x1
+#else
 .global hashtree_sha256_sha_x1
+#endif
+#ifndef __APPLE__
 .type hashtree_sha256_sha_x1,%function
+#endif
 .align 5
+#ifdef __APPLE__
+_hashtree_sha256_sha_x1:
+#else
 hashtree_sha256_sha_x1:
+#endif
 		    // Set up stack, need to save the clobbered registers d8-d11
 		    sub			sp, sp, #32
 		    stp			d8, d9, [sp]
+
+#ifdef __APPLE__
+		    adrp		digest, .LDIGEST@PAGE
+		    add			digest, digest, #:lo12:.LDIGEST@PAGEOFF
+		    adrp		k256, .LK256@PAGE
+		    add			k256, k256, #:lo12:.LK256@PAGEOFF
+#else
 		    adrp		digest, .LDIGEST
 		    add			digest, digest, #:lo12:.LDIGEST
-
 		    adrp		k256, .LK256
 		    add			k256, k256, #:lo12:.LK256
-
+#endif
 		    stp			d10, d11, [sp, #16]
+#ifdef __APPLE__
+		    adrp		padding, .LPADDING@PAGE
+		    add			padding, padding, #:lo12:.LPADDING@PAGEOFF
+#else
 		    adrp		padding, .LPADDING
 		    add			padding, padding, #:lo12:.LPADDING
-
+#endif
 		    add			last, output, count, lsl #5
 
 		    ld1			{v0.4s, v1.4s}, [digest]
@@ -113,29 +133,29 @@ hashtree_sha256_sha_x1:
 
 		    add			v9.4s, v4.4s, v16.4s
 		    sha256su0		v4.4s, v5.4s
-		    hashupdate		v9
+		    hashupdate		v9.4s
 
-		    schedule		v17, v5, v6, v7, v4, v9
-		    schedule		v18, v6, v7, v4, v5, v9
-		    schedule		v19, v7, v4, v5, v6, v9
-		    schedule		v20, v4, v5, v6, v7, v9
-		    schedule		v21, v5, v6, v7, v4, v9
-		    schedule		v22, v6, v7, v4, v5, v9
-		    schedule		v23, v7, v4, v5, v6, v9
-		    schedule		v24, v4, v5, v6, v7, v9
-		    schedule		v25, v5, v6, v7, v4, v9
-		    schedule		v26, v6, v7, v4, v5, v9
-		    schedule		v27, v7, v4, v5, v6, v9
+		    schedule		v17.4s, v5.4s, v6.4s, v7.4s, v4.4s, v9.4s
+		    schedule		v18.4s, v6.4s, v7.4s, v4.4s, v5.4s, v9.4s
+		    schedule		v19.4s, v7.4s, v4.4s, v5.4s, v6.4s, v9.4s
+		    schedule		v20.4s, v4.4s, v5.4s, v6.4s, v7.4s, v9.4s
+		    schedule		v21.4s, v5.4s, v6.4s, v7.4s, v4.4s, v9.4s
+		    schedule		v22.4s, v6.4s, v7.4s, v4.4s, v5.4s, v9.4s
+		    schedule		v23.4s, v7.4s, v4.4s, v5.4s, v6.4s, v9.4s
+		    schedule		v24.4s, v4.4s, v5.4s, v6.4s, v7.4s, v9.4s
+		    schedule		v25.4s, v5.4s, v6.4s, v7.4s, v4.4s, v9.4s
+		    schedule		v26.4s, v6.4s, v7.4s, v4.4s, v5.4s, v9.4s
+		    schedule		v27.4s, v7.4s, v4.4s, v5.4s, v6.4s, v9.4s
 
 		    add			v9.4s, v4.4s, v28.4s
-		    hashupdate		v9
+		    hashupdate		v9.4s
 		    sha256su1		v7.4s, v5.4s, v6.4s
 		    add			v9.4s, v5.4s, v29.4s
-		    hashupdate		v9
+		    hashupdate		v9.4s
 		    add			v9.4s, v6.4s, v30.4s
-		    hashupdate		v9
+		    hashupdate		v9.4s
 		    add			v9.4s, v7.4s, v31.4s
-		    hashupdate		v9
+		    hashupdate		v9.4s
 
 		    // Add initial digest and back it up
 		    add			v2.4s, v0.4s, v2.4s
@@ -153,22 +173,22 @@ hashtree_sha256_sha_x1:
 		    ld1			{v28.4s, v29.4s, v30.4s, v31.4s}, [padding]
 		    sub			padding, padding, #192
 
-		    hashupdate		v16
-		    hashupdate		v17
-		    hashupdate		v18
-		    hashupdate		v19
-		    hashupdate		v20
-		    hashupdate		v21
-		    hashupdate		v22
-		    hashupdate		v23
-		    hashupdate		v24
-		    hashupdate		v25
-		    hashupdate		v26
-		    hashupdate		v27
-		    hashupdate		v28
-		    hashupdate		v29
-		    hashupdate		v30
-		    hashupdate		v31
+		    hashupdate		v16.4s
+		    hashupdate		v17.4s
+		    hashupdate		v18.4s
+		    hashupdate		v19.4s
+		    hashupdate		v20.4s
+		    hashupdate		v21.4s
+		    hashupdate		v22.4s
+		    hashupdate		v23.4s
+		    hashupdate		v24.4s
+		    hashupdate		v25.4s
+		    hashupdate		v26.4s
+		    hashupdate		v27.4s
+		    hashupdate		v28.4s
+		    hashupdate		v29.4s
+		    hashupdate		v30.4s
+		    hashupdate		v31.4s
 
 		    // Add backed up digest
 		    add			v2.4s, v10.4s, v2.4s
@@ -185,7 +205,7 @@ hashtree_sha256_sha_x1:
 		    ldp			d10, d11, [sp], #16
 		    ret
 
-.section .rodata
+.section .rodata, "a"
 .align 4
 .LDIGEST:
 .word		    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,\

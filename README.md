@@ -21,7 +21,7 @@ There are no dependencies besides the standard `C` header `stdint.h`. Benchmarks
 have a dependency on `libm`. Tests and benchmarks on x86-64 an extra
 dependency on `cpuid.h` is needed. An optional dependency on openssl allows to
 test and benchmark against openssl. The only build-time dependency is a GCC and
-GNU assembler compatible compiler like `gcc` and `gas`. 
+GNU assembler compatible compiler like `gcc` and `gas`. On Mac OS X with newer Apple Silicon processors the library can be built with the default clang compiler. 
 
 ## Compilation
 - Start by cloning the repository

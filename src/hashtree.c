@@ -29,8 +29,10 @@ SOFTWARE.
 #include <cpuid.h>
 #endif
 #ifdef __aarch64__
+#ifndef __APPLE__
 #include <sys/auxv.h>
 #include <asm/hwcap.h>
+#endif
 #endif
 
 static void init_and_hash(unsigned char *output, const unsigned char *input, uint64_t count);
@@ -65,6 +67,9 @@ static hashtree_hash_fcn hashtree_detect() {
     return (hashtree_hash_fcn)0;
 #endif
 #ifdef __aarch64__
+#ifdef __APPLE__
+	return &hashtree_sha256_sha_x1;
+#else 
     long hwcaps = getauxval(AT_HWCAP);
     if (hwcaps & HWCAP_SHA2) {
         return &hashtree_sha256_sha_x1;
@@ -75,6 +80,7 @@ static hashtree_hash_fcn hashtree_detect() {
     }
 
     return (hashtree_hash_fcn)0;
+#endif
 #endif
 }
 

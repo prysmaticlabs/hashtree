@@ -277,23 +277,44 @@ TQ7		    .req q22
                     round_padding   \F, \G, \H, \A, \B, \C, \D, \E
 .endm
  
+#ifdef __APPLE__
+.global _hashtree_sha256_neon_x4
+#else
 .global hashtree_sha256_neon_x4
+#endif
+#ifdef __APPLE__
+//.type   hashtree_sha256_neon_x4,%function
+#else
 .type   hashtree_sha256_neon_x4,%function
-.align 5
-hashtree_sha256_neon_x4:
-                    sub                 sp, sp, #1024
-		    adrp		k256, .LK256x4
-		    add			k256, k256, #:lo12:.LK256x4
+#endif
 
+.align 5
+#ifdef __APPLE__
+_hashtree_sha256_neon_x4:
+#else
+hashtree_sha256_neon_x4:
+#endif
+                    sub                 sp, sp, #1024
+
+#ifdef __APPLE__
+		    adrp		k256,.LK256x4@GOTPAGE
+		    ldr			k256, [k256, .LK256x4@GOTPAGEOFF]
+		    adrp		padding, .LPADDINGx4@GOTPAGE
+		    ldr			padding, [padding, .LPADDINGx4@GOTPAGEOFF]
+		    adrp		digest, .LDIGESTx4L@GOTPAGE
+		    ldr			digest, [digest, .LDIGESTx4L@GOTPAGEOFF]
+		    adrp		digest2, .LDIGESTx4H@GOTPAGE
+		    ldr			digest2, [digest2, .LDIGESTx4H@GOTPAGEOFF]
+#else
+		    adrp		k256,.LK256x4
+		    add			k256, k256, #:lo12:.LK256x4
 		    adrp		padding, .LPADDINGx4
 		    add			padding, padding, #:lo12:.LPADDINGx4
-
 		    adrp		digest, .LDIGESTx4L
 		    add			digest, digest, #:lo12:.LDIGESTx4L
-
 		    adrp		digest2, .LDIGESTx4H
 		    add			digest2, digest2, #:lo12:.LDIGESTx4H
-
+#endif
                     mov                 post64, #64
                     mov                 post32, #32
                     mov                 postminus80, #-80
@@ -397,9 +418,12 @@ hashtree_sha256_neon_x4:
                     b                   .Larmv8_neon_x4_loop                   
 .Lsha256_armv8_x4_epilog:
                     add                 sp, sp, #1024
+#ifdef __APPLE__
+		    b			_hashtree_sha256_neon_x1
+#else
 		    b			hashtree_sha256_neon_x1
-
-.section .rodata
+#endif
+.section .rodata,"a"
 .align 4
 .LDIGESTx4L:
 .word		    0x6a09e667, 0x6a09e667, 0x6a09e667, 0x6a09e667,\

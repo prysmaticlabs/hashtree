@@ -12,6 +12,35 @@ jobs:
       - name: Run tests
         run: ./build/test
 
+  windows:
+    name: windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install MinGW
+        run: |
+          choco install mingw
+          echo "C:\tools\mingw64\bin" >> $GITHUB_PATH
+
+      - name: Build
+        run: CC=gcc make all
+        shell: bash
+        
+      - name: Run tests
+        run: ./build/test.exe
+        shell: bash
+
+  macos:
+    name: macos
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make all
+      - name: Run tests
+        run: ./build/test
+
   rust-bindings:
     runs-on: ubuntu-latest
     name: (${{ matrix.target }})

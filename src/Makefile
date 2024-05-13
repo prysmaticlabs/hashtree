@@ -81,7 +81,11 @@ $(libname): $(objx86)
 	$(AR) rcs $@ $(objx86)
 endif
 
+ifeq ($(WIN),1)
+all: $(libname) test
+else
 all: $(libname) test bench
+endif
 
 test: hashtree.h acutest.h test.c $(libname)
 	$(CC) $(CFLAGS) $(LDFLAGS) -L$(LIB_DIR) -o $(OUT_DIR)/test test.c $(testlibs)

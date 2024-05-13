@@ -248,7 +248,7 @@ T5 .req w22
 # it reads pre-scheduled words from ptr + offset. 
 ##################################################################################
 .macro one_round A, B, C, D, E, F, G, H, ptr, offset
-					ldr T3, [\ptr, #\offset]
+					ldr T3, [\ptr, \offset]
 					ror T1, \E, #6
 					ror T2, \A, #2
 					ror T4, \A, #13
@@ -299,21 +299,35 @@ T5 .req w22
 #   is writable.
 #
 ########################################################################################################
+
+#ifdef __APPLE__
+.global _hashtree_sha256_neon_x1
+#else
 .global hashtree_sha256_neon_x1
 .type   hashtree_sha256_neon_x1,%function
+#endif
 .align 4
+#ifdef __APPLE__
+_hashtree_sha256_neon_x1:
+#else
 hashtree_sha256_neon_x1:
+#endif
 		    sub			sp, sp, #64
 		    stp			digest,k256, [sp, #48]
 		    
 		    movi		VZ.4s, #0
                     stp                 padding, x22, [sp, #32]
-		    adrp		digest, .LDIGEST 
+#ifdef __APPLE__
+		    adrp		digest, .LDIGEST@PAGE
+		    add			digest, digest, .LDIGEST@PAGEOFF
+		    adrp		padding, .LPADDING@PAGE
+		    add			padding, padding, .LPADDING@PAGEOFF
+#else
+		    adrp		digest, .LDIGEST
 		    add			digest, digest, #:lo12:.LDIGEST
-
 		    adrp		padding, .LPADDING
-		    add 		padding, padding, #:lo12:.LPADDING
-
+		    add			padding, padding, #:lo12:.LPADDING
+#endif
 		    add			last, output, count, lsl #5
 
 .Lhash_1_block_loop:
@@ -322,9 +336,13 @@ hashtree_sha256_neon_x1:
                     beq                 .Larmv8_neon_x1_finish
                     
 		    ld1			{VR0.4s, VR1.4s, VR2.4s, VR3.4s}, [input], #64
+#ifdef __APPLE__
+		    adrp		k256, .LK256@PAGE
+		    add 		k256, k256, #:lo12:.LK256@PAGEOFF
+#else
 		    adrp		k256, .LK256
 		    add 		k256, k256, #:lo12:.LK256
-
+#endif
 # change endianness
 		    rev32		VR0.16b, VR0.16b
 		    rev32		VR1.16b, VR1.16b
@@ -423,7 +441,7 @@ hashtree_sha256_neon_x1:
 		    add			sp, sp, #64
 		    ret
 
-.section .rodata
+.section .rodata, "a"
 .align 4
 .LDIGEST:
 .word		    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,\

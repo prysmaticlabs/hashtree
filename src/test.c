@@ -26,8 +26,11 @@
 #include <cpuid.h>
 #endif
 #ifdef __aarch64__
+#ifdef __APPLE__
+#else
 #include <sys/auxv.h>
 #include <asm/hwcap.h>
+#endif
 #endif
 #include "acutest.h"
 #include "hashtree.h"
@@ -589,8 +592,10 @@ void test_armv8_neon_x4() {
 }
 
 void test_hash_armv8_crypto_multiple_blocks() {
+#ifndef __APPLE__
     long hwcaps = getauxval(AT_HWCAP);
     if (hwcaps & HWCAP_SHA2) {
+#endif
     unsigned char digest[128];
 
     hashtree_sha256_sha_x1(digest, test_16_block, 4);
@@ -602,15 +607,16 @@ void test_hash_armv8_crypto_multiple_blocks() {
     TEST_CHECK(digests_equal(digest, test_4_digests, sizeof(digest)));
     TEST_DUMP("Expected: ", test_4_digests, sizeof(test_4_digests));
     TEST_DUMP("Produced: ", digest, sizeof(digest));
+#ifndef __APPLE__
     } else {
         acutest_colored_printf_(ACUTEST_COLOR_GREEN_INTENSIVE_, "[ CPU does not support Sha2 instructions ]\n");
     }
-
+#endif
 }
 #endif
 
 int override_called;
-void test_override(unsigned char*, const unsigned char*, uint64_t) {
+void test_override(unsigned char* digest, const unsigned char* chunks, uint64_t count) {
     override_called += 1;
 }
 
