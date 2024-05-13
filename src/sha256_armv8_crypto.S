@@ -74,11 +74,16 @@ hashtree_sha256_sha_x1:
 		    // Set up stack, need to save the clobbered registers d8-d11
 		    sub			sp, sp, #32
 		    stp			d8, d9, [sp]
-		    adr			digest, .LDIGEST
-		    adr			k256, .LK256
+		    adrp		digest, .LDIGEST
+		    add			digest, digest, #:lo12:.LDIGEST
+
+		    adrp		k256, .LK256
+		    add			k256, k256, #:lo12:.LK256
 
 		    stp			d10, d11, [sp, #16]
-		    adr			padding, .LPADDING
+		    adrp		padding, .LPADDING
+		    add			padding, padding, #:lo12:.LPADDING
+
 		    add			last, output, count, lsl #5
 
 		    ld1			{v0.4s, v1.4s}, [digest]

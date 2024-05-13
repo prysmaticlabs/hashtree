@@ -308,8 +308,12 @@ hashtree_sha256_neon_x1:
 		    
 		    movi		VZ.4s, #0
                     stp                 padding, x22, [sp, #32]
-		    adr			digest, .LDIGEST 
-		    adr			padding, .LPADDING
+		    adrp		digest, .LDIGEST 
+		    add			digest, digest, #:lo12:.LDIGEST
+
+		    adrp		padding, .LPADDING
+		    add 		padding, padding, #:lo12:.LPADDING
+
 		    add			last, output, count, lsl #5
 
 .Lhash_1_block_loop:
@@ -318,7 +322,8 @@ hashtree_sha256_neon_x1:
                     beq                 .Larmv8_neon_x1_finish
                     
 		    ld1			{VR0.4s, VR1.4s, VR2.4s, VR3.4s}, [input], #64
-		    adr			k256, .LK256
+		    adrp		k256, .LK256
+		    add 		k256, k256, #:lo12:.LK256
 
 # change endianness
 		    rev32		VR0.16b, VR0.16b
