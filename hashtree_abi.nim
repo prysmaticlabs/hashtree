@@ -14,11 +14,12 @@ const srcDir = currentSourcePath.parentDir.replace('\\', '/') & "/src/"
 
 # The assember files use gnu/binutils-specific macros and lack mac support in
 # general
-when ((defined(linux) or defined(windows)) and defined(gcc)) or
-    (defined(clang) and defined(linux)):
+when
+  ((defined(linux) or defined(windows)) and defined(gcc)) or
+  ((defined(linux) or defined(macosx)) and defined(clang)):
 
   const cflags =
-    when defined(clang):
+    when defined(clang) and defined(linux):
       # The integrated `clang` assembler uses a different macro syntax but on
       # linux we can convince it to use the system assembler which _tends_ to be
       # the binutils variant
