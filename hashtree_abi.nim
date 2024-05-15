@@ -16,7 +16,8 @@ const srcDir = currentSourcePath.parentDir.replace('\\', '/') & "/src/"
 # general
 when
   ((defined(linux) or defined(windows)) and defined(gcc)) or
-  ((defined(linux) or defined(macosx)) and defined(clang)):
+  (defined(linux) and defined(clang)) or
+  (defined(macosx) and defined(clang) and defined(arm64)):
 
   const cflags =
     when defined(clang) and defined(linux):
