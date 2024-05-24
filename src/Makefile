@@ -25,11 +25,22 @@ WIN = $(shell $(CC) -dM -E - < /dev/null | grep "__WIN64__" | awk '{ print $$3 }
 
 VERSION := 0.1.0
 
+
 ASFLAGS += -g -fpic
 CFLAGS +=  -g -Wall -Werror
+CLANG_ASFLAGS = "-fno-integrated-as"
 LDFLAGS += -L .
 testlibs = -lhashtree
 benchlibs = -lhashtree -lm
+
+COMPILER_NAME := $(shell $(CC) --version 2>/dev/null | head -n 1)
+IS_CLANG := $(findstring clang, $(COMPILER_NAME))
+
+ifeq ($(IS_CLANG),clang)
+ifneq ($(ARM),1)
+	ASFLAGS += $(CLANG_ASFLAGS)
+endif
+endif
 
 ifeq ($(HAVE_OPENSSL),1)
 CFLAGS += -DHAVE_OPENSSL
