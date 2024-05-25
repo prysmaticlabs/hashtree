@@ -28,7 +28,7 @@ VERSION := 0.1.0
 
 ASFLAGS += -g -fpic
 CFLAGS +=  -g -Wall -Werror
-CLANG_ASFLAGS = "-fno-integrated-as"
+CLANG_ASFLAGS = -fno-integrated-as
 LDFLAGS += -L .
 testlibs = -lhashtree
 benchlibs = -lhashtree -lm
