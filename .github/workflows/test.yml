@@ -2,13 +2,23 @@ name: test
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  linux:
-    name: linux
+  linux-gcc:
+    name: linux-gcc
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build
-        run: make all
+        run: CC=gcc make all
+      - name: Run tests
+        run: ./build/test
+
+  linux-clang:
+    name: linux-clang
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: CC=clang make all
       - name: Run tests
         run: ./build/test
 
