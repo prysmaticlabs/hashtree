@@ -31,9 +31,19 @@ jobs:
         run: ./build/test.exe
         shell: bash
 
-  macos:
-    name: macos
+  macos-arm:
+    name: macos-arm
     runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: make all
+      - name: Run tests
+        run: ./build/test
+
+  macos-intel:
+    name: macos-intel
+    runs-on: macos-12
     steps:
       - uses: actions/checkout@v4
       - name: Build
