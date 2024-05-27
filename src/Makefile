@@ -58,8 +58,12 @@ else
 endif
 
 # ARM architecture detection
-ARCH := $(shell uname -m)
-ARM := $(shell echo $(ARCH) | grep -E '^(arm|aarch64)' >/dev/null && echo 1 || echo 0)
+ifdef CC
+  ARM = $(shell $(CC) -dM -E - < /dev/null | grep "aarch" | awk '{ print $$3 }')
+else
+  ARCH = $(shell uname -m)
+  ARM = $(shell echo $(ARCH) | grep -E '^(arm|aarch64)' >/dev/null && echo 1 || echo 0)
+endif
 
 # Cross-platform compiler selection
 # check for default, skip setting if user passed in specific cross-compilation lib
