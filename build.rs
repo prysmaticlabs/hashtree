@@ -46,5 +46,11 @@ fn main() {
     }
 
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
-    println!("cargo:rustc-link-lib=static=hashtree");
+
+    let build_target = env::var("TARGET").unwrap();
+    if build_target.contains("windows") {
+        println!("cargo:rustc-link-lib=static=libhashtree");
+    } else {
+        println!("cargo:rustc-link-lib=static=hashtree");
+    }
 }
