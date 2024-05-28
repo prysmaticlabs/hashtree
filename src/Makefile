@@ -20,34 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-ARM = $(shell $(CC) -dM -E - < /dev/null | grep "aarch" | awk '{ print $$3 }')
-WIN = $(shell $(CC) -dM -E - < /dev/null | grep "__WIN64__" | awk '{ print $$3 }')
-
+###############################################################################
+# Constants and Configuration Variables
+###############################################################################
 VERSION := 0.1.0
-
-
-ASFLAGS += -g -fpic
-CFLAGS +=  -g -Wall -Werror
-CLANG_ASFLAGS = -fno-integrated-as
-LDFLAGS += -L .
-testlibs = -lhashtree
-benchlibs = -lhashtree -lm
-
-COMPILER_NAME := $(shell $(CC) --version 2>/dev/null | head -n 1)
-IS_CLANG := $(findstring clang, $(COMPILER_NAME))
-
-ifeq ($(IS_CLANG),clang)
-ifneq ($(ARM),1)
-	ASFLAGS += $(CLANG_ASFLAGS)
-endif
-endif
-
-ifeq ($(HAVE_OPENSSL),1)
-CFLAGS += -DHAVE_OPENSSL
-benchlibs += -lcrypto
-testlibs += -lcrypto
-endif
-
 OUT_DIR ?= $(CURDIR)/../build
 OBJ_DIR := $(OUT_DIR)/obj
 LIB_DIR := $(OUT_DIR)/lib
@@ -56,18 +32,81 @@ LIB_DIR := $(OUT_DIR)/lib
 $(shell mkdir -p $(OBJ_DIR))
 $(shell mkdir -p $(LIB_DIR))
 
-objarm = $(OBJ_DIR)/sha256_armv8_neon_x4.o\
-         $(OBJ_DIR)/sha256_armv8_neon_x1.o\
-         $(OBJ_DIR)/sha256_armv8_crypto.o\
-         $(OBJ_DIR)/hashtree.o
+ASFLAGS += -g -fpic
+CFLAGS +=  -g -Wall -Werror
+CLANG_ASFLAGS = -fno-integrated-as
+LDFLAGS += -L .
+testlibs = -lhashtree
+benchlibs = -lhashtree -lm
 
-objx86 = $(OBJ_DIR)/sha256_shani.o\
-         $(OBJ_DIR)/sha256_avx_x16.o\
-         $(OBJ_DIR)/sha256_avx_x8.o\
-         $(OBJ_DIR)/sha256_avx_x4.o\
-         $(OBJ_DIR)/sha256_avx_x1.o\
-         $(OBJ_DIR)/sha256_sse_x1.o\
-         $(OBJ_DIR)/hashtree.o
+###############################################################################
+# Platform Configuration
+###############################################################################
+# Platform detection.
+ifndef OS
+    OS := $(shell uname -s)
+endif
+
+ifeq ($(OS),Windows_NT)
+	PLATFORM = Windows
+else
+	ifeq ($(OS),Darwin)
+		PLATFORM = Darwin
+	else
+		PLATFORM = Linux
+	endif
+endif
+
+# ARM architecture detection
+ARCH := $(shell uname -m)
+ARM := $(shell echo $(ARCH) | grep -E '^(arm|aarch64)' >/dev/null && echo 1 || echo 0)
+
+# Cross-platform compiler selection
+# check for default, skip setting if user passed in specific cross-compilation lib
+ifeq ($(CC), cc)
+	ifeq ($(PLATFORM),Darwin)
+		CC = clang
+	else
+		CC = gcc
+	endif
+endif
+
+ifeq ($(CC),clang)
+	ifneq ($(ARM),1)
+		ASFLAGS += $(CLANG_ASFLAGS)
+	endif
+endif
+
+ifeq ($(HAVE_OPENSSL),1)
+	CFLAGS += -DHAVE_OPENSSL
+	benchlibs += -lcrypto
+	testlibs += -lcrypto
+endif
+
+ifeq ($(PLATFORM),Windows)
+	libname = $(LIB_DIR)/libhashtree.lib
+else
+	libname = $(LIB_DIR)/libhashtree.a
+endif
+
+ifeq ($(ARM), 1)
+	OBJ_LIST = $(OBJ_DIR)/sha256_armv8_neon_x4.o\
+		$(OBJ_DIR)/sha256_armv8_neon_x1.o\
+		$(OBJ_DIR)/sha256_armv8_crypto.o\
+		$(OBJ_DIR)/hashtree.o
+else
+	OBJ_LIST = $(OBJ_DIR)/sha256_shani.o\
+		$(OBJ_DIR)/sha256_avx_x16.o\
+		$(OBJ_DIR)/sha256_avx_x8.o\
+		$(OBJ_DIR)/sha256_avx_x4.o\
+		$(OBJ_DIR)/sha256_avx_x1.o\
+		$(OBJ_DIR)/sha256_sse_x1.o\
+		$(OBJ_DIR)/hashtree.o
+endif
+
+###############################################################################
+# Commands
+###############################################################################
 
 .PHONY : clean .FORCE
 .FORCE: 
@@ -78,21 +117,10 @@ $(OBJ_DIR)/%.o: %.S
 $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-ifeq ($(WIN),1)
-libname = $(LIB_DIR)/libhashtree.lib
-else
-libname = $(LIB_DIR)/libhashtree.a
-endif
+$(libname): $(OBJ_LIST)
+	$(AR) rcs $@ $(OBJ_LIST)
 
-ifeq ($(ARM),1)
-$(LIB_DIR)/libhashtree.a: $(objarm)
-	$(AR) rcs $@ $(objarm)
-else
-$(libname): $(objx86)
-	$(AR) rcs $@ $(objx86)
-endif
-
-ifeq ($(WIN),1)
+ifeq ($(PLATFORM),Windows)
 all: $(libname) test
 else
 all: $(libname) test bench
@@ -105,7 +133,7 @@ bench: hashtree.h ubench.h bench.c $(libname)
 	$(CC) $(CFLAGS) $(LDFLAGS) -L$(LIB_DIR) -o $(OUT_DIR)/bench bench.c $(benchlibs)
 
 clean:
-	-rm -f $(objarm) $(objx86) $(LIB_DIR)/libhashtree.a $(LIB_DIR)/libhashtree.lib $(OUT_DIR)/test $(OUT_DIR)/test.exe $(OUT_DIR)/bench hashtree.pc
+	-rm -f $(OBJ_LIST) $(LIB_DIR)/libhashtree.a $(LIB_DIR)/libhashtree.lib $(OUT_DIR)/test $(OUT_DIR)/test.exe $(OUT_DIR)/bench hashtree.pc
 
 ifeq ($(PREFIX),)
 PREFIX := /usr
@@ -124,7 +152,7 @@ hashtree.pc: .FORCE
 	@echo 'LIBS: -L$${libdir} -lhashtree' >> hashtree.pc
 	@echo 'Cflags: -I$${includedir}'>> hashtree.pc
 
-ifneq ($(WIN),1)
+ifneq ($(PLATFORM),Windows)
 install: $(libname) hashtree.pc
 	install -d $(DESTDIR)$(PREFIX)/lib
 	install -m 644 $(libname) $(DESTDIR)$(PREFIX)/lib/ 
