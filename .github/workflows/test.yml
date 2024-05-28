@@ -52,19 +52,25 @@ jobs:
         run: ./build/test
 
   rust-bindings:
-    runs-on: ubuntu-latest
-    name: (${{ matrix.target }})
+    runs-on: ${{ matrix.settings.host }}
+    name: (${{ matrix.settings.target }})
     strategy:
       matrix:
-        target: [         
-          aarch64-apple-darwin,
-          x86_64-unknown-linux-gnu,
-          aarch64-unknown-linux-gnu,
-          x86_64-unknown-linux-musl,
-          aarch64-unknown-linux-musl,
-          x86_64-pc-windows-msvc,
-          aarch64-pc-windows-msvc
-        ]
+        settings:
+          - target: aarch64-apple-darwin
+            host: macos-latest
+          - target: x86_64-unknown-linux-gnu
+            host: ubuntu-latest
+          - target: aarch64-unknown-linux-gnu
+            host: ubuntu-latest
+          - target: x86_64-unknown-linux-musl
+            host: ubuntu-latest
+          - target: aarch64-unknown-linux-musl
+            host: ubuntu-latest
+          - target: x86_64-pc-windows-msvc
+            host: windows-latest
+          - target: aarch64-pc-windows-msv
+            host: windows-latest
     steps:
     - name: checkout
       uses: actions/checkout@v3
@@ -72,11 +78,11 @@ jobs:
       run: |
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
         sh rustup-init.sh -y --default-toolchain none
-        rustup target add ${{ matrix.target }}
+        rustup target add ${{ matrix.settings.target }}
     - name: Build and Test
       run: |
-        cargo build --release --target ${{ matrix.target }}
-        cargo test --target ${{ matrix.target }}
+        cargo build --release --target ${{ matrix.settings.target }}
+        cargo test --target ${{ matrix.settings.target }}
 
   nim:
     name: nim
