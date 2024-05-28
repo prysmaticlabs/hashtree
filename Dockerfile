@@ -1,6 +1,4 @@
-ARG IMAGE
-
-FROM $IMAGE
+FROM rust:latest
 
 ARG TARGET
 
