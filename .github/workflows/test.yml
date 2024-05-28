@@ -60,28 +60,36 @@ jobs:
           - name: Linux arm64
             target: aarch64-unknown-linux-gnu
             runner: ubuntu-latest
-            dockerfile: Dockerfile.linux-arm64
-            docker-platform: linux/arm64
+            docker-image: "rust:latest"
+            docker-platform: "linux/arm64"
           - name: Windows x86
             target: x86_64-pc-windows-msvc
             runner: windows-latest
-          - name: Windows arm64
-            target: aarch64-pc-windows-msvc
-            runner: windows-latest
+          # - name: Windows arm64
+          #   target: aarch64-pc-windows-msvc
+          #   runner: windows-latest
+          #   docker-image: "rust:latest"
+          #   docker-platform: "linux/arm64"
     steps:
     - name: checkout
       uses: actions/checkout@v3
     - name: Build in docker
-      if: ${{ matrix.settings.dockerfile != '' }}
-      run: docker build --platform ${{ matrix.settings.docker-platform }} -t ${{ matrix.settings.target }} -f ${{ matrix.settings.dockerfile }} .
+      if: ${{ matrix.settings.docker-image != '' }}
+      run: |
+        docker build \
+          --build-arg IMAGE="${{ matrix.settings.docker-image }}" \
+          --build-arg TARGET="${{ matrix.settings.target }}" \
+          --platform ${{ matrix.settings.docker-platform }} \
+          -t aarch64-unknown-linux-gnu \
+          .
     - name: install rustup
-      if: ${{ !matrix.settings.dockerfile }}
+      if: ${{ !matrix.settings.docker-image }}
       run: |
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
         sh rustup-init.sh -y --default-toolchain none
         rustup target add ${{ matrix.settings.target }}
     - name: Build and Test
-      if: ${{ !matrix.settings.dockerfile }}
+      if: ${{ !matrix.settings.docker-image }}
       run: |
         cargo build --release --target ${{ matrix.settings.target }}
         cargo test --target ${{ matrix.settings.target }}
