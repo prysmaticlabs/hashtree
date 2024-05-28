@@ -70,7 +70,7 @@ jobs:
             host: ubuntu-latest
           - target: x86_64-pc-windows-msvc
             host: windows-latest
-          - target: aarch64-pc-windows-msv
+          - target: aarch64-pc-windows-msvc
             host: windows-latest
     steps:
     - name: checkout
