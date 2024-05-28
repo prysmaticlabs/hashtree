@@ -1,0 +1,14 @@
+FROM rust:latest
+
+RUN apt-get update && apt-get install -y \
+    qemu-user-static \
+    gcc-aarch64-linux-gnu
+
+RUN rustup target add aarch64-unknown-linux-gnu
+
+COPY . /usr/src/hashtree
+WORKDIR /usr/src/hashtree
+
+RUN cargo build --release --target=aarch64-unknown-linux-gnu
+
+RUN ./build/test
