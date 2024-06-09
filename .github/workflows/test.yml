@@ -2,76 +2,99 @@ name: test
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  linux-gcc:
-    name: linux-gcc
-    runs-on: ubuntu-latest
+  build:
+    name: Library - ${{ matrix.settings.name }}
+    runs-on: ${{ matrix.settings.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - name: MacOS arm64
+            target: aarch64-apple-darwin
+            runner: macos-latest
+          - name: Linux x86
+            target: x86_64-unknown-linux-gnu
+            runner: ubuntu-latest
+          - name: Linux arm64
+            target: aarch64-unknown-linux-gnu
+            runner: ubuntu-latest
+          - name: Linux x86 using clang
+            target: x86_64-unknown-linux-gnu
+            runner: ubuntu-latest
+            cc: clang
+          - name: Linux arm64 using clang
+            target: aarch64-unknown-linux-gnu
+            runner: ubuntu-latest
+            cc: clang
+          - name: Windows x86
+            target: x86_64-pc-windows-msvc
+            runner: windows-latest
+          - name: Windows arm64
+            target: aarch64-pc-windows-msvc
+            runner: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cross-Compile Build
+        if: ${{ matrix.settings.cc != '' }}
+        run: CC=${{ matrix.settings.cc }} make all
       - name: Build
-        run: CC=gcc make all
-      - name: Run tests
-        run: ./build/test
-
-  linux-clang:
-    name: linux-clang
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build
-        run: CC=clang make all
-      - name: Run tests
-        run: ./build/test
-
-  windows:
-    name: windows
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install MinGW
-        run: |
-          choco install mingw
-          echo "C:\tools\mingw64\bin" >> $GITHUB_PATH
-
-      - name: Build
-        run: CC=gcc make all
-        shell: bash
-        
-      - name: Run tests
-        run: ./build/test.exe
-        shell: bash
-
-  macos:
-    name: macos
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build
+        if: ${{ !matrix.settings.cc }}
         run: make all
       - name: Run tests
         run: ./build/test
 
   rust-bindings:
-    runs-on: ubuntu-latest
-    name: (${{ matrix.target }})
+    name: Rust Bindings - ${{ matrix.settings.name }}
+    runs-on: ${{ matrix.settings.runner }}
     strategy:
+      fail-fast: false
       matrix:
-        target: [
-          x86_64-unknown-linux-gnu,
-          aarch64-unknown-linux-gnu,
-        ]
+        settings:
+          - name: MacOS arm64
+            target: aarch64-apple-darwin
+            runner: macos-latest
+          - name: Linux x86
+            target: x86_64-unknown-linux-gnu
+            runner: ubuntu-latest
+          - name: Linux arm64
+            target: aarch64-unknown-linux-gnu
+            runner: ubuntu-latest
+            use-docker: true
+          - name: Windows x86
+            target: x86_64-pc-windows-msvc
+            runner: windows-latest
+          # - name: Windows arm64
+          #   target: aarch64-pc-windows-msvc
+          #   runner: windows-latest
+          #   use-docker: true
     steps:
     - name: checkout
       uses: actions/checkout@v3
+    - name: Set up QEMU
+      if: ${{ matrix.settings.use-docker && matrix.settings.runner == 'ubuntu-latest' }}
+      uses: docker/setup-qemu-action@v3
+      with:
+        platforms: arm64
+    - name: Build in docker
+      if: ${{ matrix.settings.use-docker }}
+      run: |
+        docker buildx build \
+          --build-arg TARGET=${{ matrix.settings.target }} \
+          --platform linux/arm64 \
+          -t ${{ matrix.settings.target }} \
+          .
     - name: install rustup
+      if: ${{ !matrix.settings.use-docker }}
       run: |
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
         sh rustup-init.sh -y --default-toolchain none
-        rustup target add ${{ matrix.target }}
+        rustup target add ${{ matrix.settings.target }}
     - name: Build and Test
+      if: ${{ !matrix.settings.use-docker }}
       run: |
-        cargo build --release
-        cargo test
+        cargo build --release --target ${{ matrix.settings.target }}
+        cargo test --target ${{ matrix.settings.target }}
 
   nim:
     name: nim
