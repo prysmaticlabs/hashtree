@@ -28,7 +28,6 @@ avx512:
 
 avx2:
 		    CALL hashtree_sha256_avx2_x8(SB)
-		    JMP epilog
 
 epilog:
 		    MOVQ BX, SP
