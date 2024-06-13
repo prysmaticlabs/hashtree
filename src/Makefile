@@ -61,6 +61,11 @@ endif
 # ARM architecture detection
 ifdef CC
   ARM = $(shell $(CC) -dM -E - < /dev/null | grep "aarch" | awk '{ print $$3 }')
+  ifneq ($(findstring mingw, $(CC)),)
+	ifneq ($(ARM),1)
+		PLATFORM = Windows
+  	endif
+  endif
 else
   ARCH = $(shell uname -m)
   ARM = $(shell echo $(ARCH) | grep -E '^(arm|aarch64)' >/dev/null && echo 1 || echo 0)
