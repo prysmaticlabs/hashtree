@@ -1,4 +1,4 @@
-// +build linux,arm64
+// +build arm64
 
 TEXT ·HashtreeHash(SB), 0, $2048-24
 		    MOVD output+0(FP), R0
