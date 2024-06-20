@@ -974,4 +974,8 @@ hashtree_sha256_shani_x2:
 #endif
 	add		rsp, frame_size
 	ret	
+#ifdef __linux__ 
+.size hashtree_sha256_shani_x2,.-hashtree_sha256_shani_x2
+.section .note.GNU-stack,"",@progbits
+#endif
 #endif
