@@ -21,25 +21,19 @@ var (
 func HashtreeHash(output *byte, input *byte, count uint64)
 
 const (
-	// chunksPerAsmIter is what the widest dispatch path (AVX-512) consumes per
-	// iteration, so a multiple of it leaves no scalar tail on any path.
-	chunksPerAsmIter = 32
+	chunksPerAsmIter = 32 // widest dispatch path (AVX-512), so no path is left a scalar tail
 	maxAsmIters      = 64
-	// maxAsmChunks is the maximum number of chunks that can be passed to
-	// HashtreeHash(). The limit exists because implementations that rely on
-	// assembly routines are not asynchronously preemptible.
-	maxAsmChunks = chunksPerAsmIter * maxAsmIters // 64KiB
+	maxAsmChunks     = chunksPerAsmIter * maxAsmIters
 )
 
-// hashChunked feeds HashtreeHash at most maxAsmChunks at a time. Between
-// calls the goroutine is in Go code, where a collection can preempt it.
+// hashChunked bounds one HashtreeHash call: the assembly is not asynchronously
+// preemptible, so a whole layer in one call blocks every GC for its duration.
 func hashChunked(digests [][32]byte, chunks [][32]byte) {
 	for len(chunks) > maxAsmChunks {
 		HashtreeHash(&digests[0][0], &chunks[0][0], maxAsmChunks/2)
 		chunks = chunks[maxAsmChunks:]
 		digests = digests[maxAsmChunks/2:]
 	}
-	// An odd trailing chunk yields no digest, so digests may be empty here.
 	if len(chunks) > 1 {
 		HashtreeHash(&digests[0][0], &chunks[0][0], uint64(len(chunks)/2))
 	}

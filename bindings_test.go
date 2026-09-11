@@ -296,10 +296,6 @@ func BenchmarkHashList(b *testing.B) {
 	}
 }
 
-// TestHashChunkedBoundary checks the sizes around the maxAsmChunks cut, where
-// hashChunked switches from one HashtreeHash call to several. The generic Go
-// hasher is the oracle: it hashes every pair independently, so it cannot share
-// the off-by-one the chunking loop could have.
 func TestHashChunkedBoundary(t *testing.T) {
 	counts := []int{
 		2,
@@ -331,10 +327,7 @@ func TestHashChunkedBoundary(t *testing.T) {
 	}
 }
 
-// TestHashChunkedOddTail checks that an odd chunk count past the maxAsmChunks
-// cut still hashes every full pair instead of indexing an exhausted digest
-// slice. The public Hash rejects odd counts, so hashChunked is called
-// directly.
+// Hash rejects odd counts, so hashChunked is called directly.
 func TestHashChunkedOddTail(t *testing.T) {
 	if !supportedCPU {
 		t.Skip("hashChunked requires assembly support")
@@ -357,14 +350,7 @@ func TestHashChunkedOddTail(t *testing.T) {
 	}
 }
 
-// BenchmarkSTW reports the worst "stopping the world" pause a garbage
-// collection saw while a large Merkle layer was being hashed. HashtreeHash is
-// assembly, which the runtime never treats as an asynchronous preemption
-// point, so a call covering a whole layer holds up every collection in the
-// process for as long as it runs. Run with GOMAXPROCS>=2 so the hashing and
-// the collector overlap. The ns/op is not a throughput figure: the collector
-// loop competes for the same CPUs and runs far more often once the pause is
-// fixed.
+// Needs GOMAXPROCS>=2. ns/op is not a throughput figure: the GC loop shares the CPUs.
 func BenchmarkSTW(b *testing.B) {
 	sample := []metrics.Sample{{Name: "/sched/pauses/stopping/gc:seconds"}}
 	metrics.Read(sample)
@@ -372,7 +358,7 @@ func BenchmarkSTW(b *testing.B) {
 		b.Skipf("this Go runtime has no %s metric", sample[0].Name)
 	}
 
-	const chunks = 1 << 21 // 64 MiB in, 32 MiB out
+	const chunks = 1 << 21
 	in := make([][32]byte, chunks)
 	for i := range in {
 		in[i][0] = byte(i)
