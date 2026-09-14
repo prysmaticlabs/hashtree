@@ -36,7 +36,7 @@ Registers used:
 
 Clobbers 
     s10 (SCHD) keeps a scheduled word
-    s11 (a63) 
+    s9 (a63) 
 */
 
 #ifdef __riscv
@@ -95,7 +95,7 @@ Clobbers
 .endm
 
 // Changes endianness of a word.
-// returns the byteswapped word in rd and clobbers a6, a5, a4 and s11
+// returns the byteswapped word in rd and clobbers a6, a5, a4 and s9
 .macro BSWP rd
     slliw   a6, \rd, 24 
     srliw   a5, \rd, 24
@@ -116,25 +116,25 @@ Clobbers
 .macro SCHED offset
 	.set .Lmyoff, (\offset + 56) % 64
         lwu      a5, (.Lmyoff)(sp)        // a5 = w[i-2]
-        WROR     s11, a5, 2                           // s11 = w[i-2] >> 2
+        WROR     s9, a5, 2                           // s9 = w[i-2] >> 2
 	.set .Lmyoff, (\offset + 4) % 64
         lwu      s10, (.Lmyoff)(sp)         // s10 = w[i-15]
-        xor    s11, s11, a5                        // s11 = (w[i-2] >> 2) ^ w[i-2]
+        xor    s9, s9, a5                        // s9 = (w[i-2] >> 2) ^ w[i-2]
         WROR     a4, s10, 11                          // a4 = w[i-15] >> 11
         srliw   a5, a5, 10                          // a5 = w[i-2] > 10
         xor    a4, a4, s10                        // a4 = (w[i-15] >> 11) ^ w[i-15]
         srliw   s10, s10, 3                           // s10 = w[i-15] >> 3 
-        WROR     s11, s11, 17                          // s11 = (w[i-2] >> 19) ^ (w[i-2] >> 17)
+        WROR     s9, s9, 17                          // s9 = (w[i-2] >> 19) ^ (w[i-2] >> 17)
         WROR     a4, a4, 7                           // a4 = (w[i-15] >> 18) ^ (w[i-15] >> 7)
-        xor    a5, s11, a5                        // a5 = (w[i-2] >> 19) ^ (w[i-2] >> 17) ^ (w[i-2] >> 10)
+        xor    a5, s9, a5                        // a5 = (w[i-2] >> 19) ^ (w[i-2] >> 17) ^ (w[i-2] >> 10)
 	.set .Lmyoff, (\offset + 0) % 64
-        lwu      s11, (.Lmyoff)(sp)                  // s11 = w[i-16]
+        lwu      s9, (.Lmyoff)(sp)                  // s9 = w[i-16]
         xor    a4, a4, s10                         // a4 = (w[i-15] >> 18) ^ (w[i-15] >> 7) ^ (w[i-15] >> 3)
 	.set .Lmyoff, (\offset + 36) % 64
         lwu      s10, (.Lmyoff)(sp)        // s10 = w[i-7]
-        addw    s11, s11, a5                        // s11 = w[i-16] + ((w[i-2] >> 19) ^ (w[i-2] >> 17) ^ (w[i-2] >> 10))
+        addw    s9, s9, a5                        // s9 = w[i-16] + ((w[i-2] >> 19) ^ (w[i-2] >> 17) ^ (w[i-2] >> 10))
         addw    s10, s10, a4
-        addw    s10, s10, s11
+        addw    s10, s10, s9
 	.set .Lmyoff, (\offset + 0) % 64
         sw      s10, (.Lmyoff)(sp)                  // w[i] is stored and kept in s10
 .endm
@@ -148,29 +148,29 @@ Clobbers
         WROR     a5, \e, 14                 // a5 = e >> 14
         WROR     a4, \a, 9                  // a4 = a >> 9
         xor    a5, a5, \e               // a5 = (e >> 14) ^ e
-        xor    s11, \f, \g                  // s11 = f ^ g
+        xor    s9, \f, \g                  // s9 = f ^ g
         xor    a4, a4, \a               // a4 = (a >> 9) ^ a
         WROR     a5, a5, 5               // a5 = (e >> 19)^(e >> 5)
         WROR     a4, a4, 11              // a4 = (a >> 20)^(a >> 11)
         xor    a5, a5, \e               // a5 = (e >> 14)^(e >> 5) ^ e
-        and    s11, s11, \e               // s11 = (f ^ g) & e
+        and    s9, s9, \e               // s9 = (f ^ g) & e
         WROR     a5, a5, 6               // a5 = (e >> 25)^(e >> 11)^(e >> 6)
-        xor    s11, s11, \g               // s11 = ((f ^ g) & e) ^ g
+        xor    s9, s9, \g               // s9 = ((f ^ g) & e) ^ g
         xor    a4, a4, \a               // a4 = (a >> 20)^(a >> 11) ^ a
-        addw    s11, s11, a5            // s11 = ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6)
+        addw    s9, s9, a5            // s9 = ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6)
         lwu      a5, (\offset)(\base)      // a5 = K[offset]
         WROR     a4, a4, 2               // a4 = (a >> 22)^(a >> 13)^(a >> 2)
 .ifnb \USE_SCHED
         addw    a5, a5, s10            // a5 = K[offset] + w 
 .endif
-        addw    \h, \h, s11                  // h = h + ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6)
-        and    s11, \a, \c                  // s11 = a & c
+        addw    \h, \h, s9                  // h = h + ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6)
+        and    s9, \a, \c                  // s9 = a & c
         or     a6, \a, \c                   // a6 = a | c
         addw    \h, \h, a5                  // h = h + ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6) + K[offset] + w 
         and    a6, a6, \b                 // a6 = (a | c) & b
         addw    \d, \d, \h                     // d = d + h + ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6) + K[offset] + w
 	addw 	\h, \h, a4 		// h = h + ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6) + K[offset] + w + (a >> 22)^(a >> 13)^(a >> 2)
-        or     a6, a6, s11              // a6 = ((a | c) & b) | (a & c)
+        or     a6, a6, s9              // a6 = ((a | c) & b) | (a & c)
         addw    \h, \h, a6                   // h = h + ((f ^ g) & e) ^ g + (e >> 25)^(e >> 11)^(e >> 6) + K[offset] + w + (((a | c) & b) | (a & c)) + (a >> 22)^(a >> 13)^(a >> 2)
 .endm
 
@@ -235,7 +235,7 @@ hashtree_sha256_riscv_x1:
     // set the stack (assumed to be aligned)
     addi sp,sp,-FRAMEZ
     sd s10, 64(sp)
-    sd s11, 72(sp)
+    sd s9, 72(sp)
     
     //initialize the constants
     la      a3, .LK256
@@ -270,16 +270,16 @@ hashtree_sha256_riscv_x1:
     lwu      a6, DIGEST_OFFSET(a3)
     lwu      a5, DIGEST_OFFSET+4(a3)
     addw    t0, t0, a6
-    lwu      s11, DIGEST_OFFSET+8(a3)
+    lwu      s9, DIGEST_OFFSET+8(a3)
     addw    t1, t1, a5
     lwu      a6, DIGEST_OFFSET+12(a3)
-    addw    t2, t2, s11
+    addw    t2, t2, s9
     lwu      a5, DIGEST_OFFSET+16(a3)
     addw    t3, t3, a6
-    lwu      s11, DIGEST_OFFSET+20(a3)
+    lwu      s9, DIGEST_OFFSET+20(a3)
     addw    t4, t4, a5
     lwu      a6, DIGEST_OFFSET+24(a3)
-    addw    t5, t5, s11
+    addw    t5, t5, s9
     lwu      a5, DIGEST_OFFSET+28(a3)
     addw    t6, t6, a6
     addw    a7, a7, a5
@@ -305,16 +305,16 @@ hashtree_sha256_riscv_x1:
     lwu      a6, 0(sp)
     lwu      a5, 4(sp)
     addw    t0, t0, a6
-    lwu      s11, 8(sp)
+    lwu      s9, 8(sp)
     addw    t1, t1, a5
     lwu      a6, 12(sp)
-    addw    t2, t2, s11
+    addw    t2, t2, s9
     lwu      a5, 16(sp)
     addw    t3, t3, a6
-    lwu      s11, 20(sp)
+    lwu      s9, 20(sp)
     addw    t4, t4, a5
     lwu      a6, 24(sp)
-    addw    t5, t5, s11
+    addw    t5, t5, s9
     lwu      a5, 28(sp)
     addw    t6, t6, a6
     addw    a7, a7, a5
@@ -342,7 +342,7 @@ hashtree_sha256_riscv_x1:
 .Lsha256_riscv_x1_epilogue:
     // restore the stack
     ld      s10, 64(sp)
-    ld      s11, 72(sp)
+    ld      s9, 72(sp)
     addi    sp,sp,FRAMEZ
     ret
 
